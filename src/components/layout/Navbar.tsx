@@ -152,9 +152,9 @@ const Navbar = ({ className }: NavbarProps) => {
             <Button
               asChild
               size="sm"
-              className="bg-primary hover:bg-caramel text-primary-foreground"
+              className="bg-primary hover:bg-amber-800 hover:text-white text-primary-foreground"
             >
-              <Link href="/register">Join Now</Link>
+              <Link href="/register">Register</Link>
             </Button>
           </nav>
 

@@ -8,6 +8,12 @@
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui;
   --font-serif: var(--font-lora), ui-serif, Georgia;
 
+  /* 1. MAP BRAND COLORS */
+  --color-cream: var(--cream);
+  --color-caramel: var(--caramel);
+  --color-brownie: var(--brownie);
+  --color-coffee: var(--coffee);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);

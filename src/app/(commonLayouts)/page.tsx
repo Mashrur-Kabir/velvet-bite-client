@@ -118,7 +118,7 @@ export default function Home() {
               </div>
               <Button
                 asChild
-                className="rounded-full bg-primary px-10 py-6 text-lg font-bold hover:bg-caramel transition-all active:scale-95 shadow-lg"
+                className="rounded-full bg-primary px-10 py-6 text-lg font-bold hover:bg-amber-800 hover:text-white transition-all active:scale-95 shadow-lg"
               >
                 <Link href="/meals">Explore</Link>
               </Button>
@@ -129,7 +129,7 @@ export default function Home() {
 
       <div className="relative z-20 bg-background">
         {/* 2. QUICK CATEGORIES SECTION */}
-        <section className="container mx-auto -mt-16 px-6 pb-20">
+        <section className="container mx-auto pt-20 px-6 pb-20">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {CATEGORIES.map((cat, i) => (
               <motion.div
@@ -215,18 +215,27 @@ export default function Home() {
               ready to share your menu, we have a place for you.
             </p>
             <div className="relative z-10 flex flex-wrap justify-center gap-6">
+              {/* Primary CTA: Start Ordering */}
               <Button
                 asChild
                 size="lg"
-                className="bg-primary text-white hover:bg-caramel rounded-full px-12 py-7 text-lg font-bold shadow-xl shadow-primary/20"
+                className="bg-primary text-white hover:bg-amber-800 rounded-full px-12 py-7 text-lg font-bold shadow-xl active:scale-95 group transition-all duration-300"
               >
-                <Link href="/register">Start Ordering</Link>
+                <Link href="/register" className="flex items-center">
+                  Start Ordering
+                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+                </Link>
               </Button>
+
+              {/* Secondary CTA: Become a Provider */}
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="border-cream/20 text-cream hover:bg-cream/10 rounded-full px-12 py-7 text-lg font-bold"
+                className={cn(
+                  "rounded-full px-5 py-7 text-lg font-bold transition-all duration-300 active:scale-95",
+                  "border border-cream/30 text-cream bg-transparent",
+                  "hover:bg-amber-900",
+                )}
               >
                 <Link href="/register?role=provider">Become a Provider</Link>
               </Button>
