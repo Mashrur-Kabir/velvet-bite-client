@@ -30,6 +30,9 @@ export function MealCard({ meal }: { meal: MealProps }) {
           src={meal.image}
           alt={meal.name}
           fill
+          // This tells the browser to download a smaller version of the image
+          // depending on the user's screen size.
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute top-4 right-4">

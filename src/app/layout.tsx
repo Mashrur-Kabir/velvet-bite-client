@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lora, Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { Toaster } from "sonner";
 
 // 1. Initialize Fonts
 const lora = Lora({
@@ -36,6 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster position="top-center" richColors expand={true} />
         </ThemeProvider>
       </body>
     </html>

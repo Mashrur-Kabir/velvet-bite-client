@@ -199,7 +199,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            className="rounded-[3rem] bg-brownie p-12 md:p-20 text-cream shadow-2xl text-center relative overflow-hidden"
+            className="rounded-[3rem] bg-brownie p-12 md:p-20 text-cream shadow-2xl shadow-black/80 text-center relative overflow-hidden"
           >
             {/* Subtle Background Pattern */}
             <div className="absolute inset-0 opacity-5 pointer-events-none">

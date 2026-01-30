@@ -30,7 +30,7 @@ import { useMounted } from "@/hooks/useMounted";
 import { motion } from "framer-motion";
 
 // Create a motion-enabled Link for the logo
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 interface MenuItem {
   title: string;
