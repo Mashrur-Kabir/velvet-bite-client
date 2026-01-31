@@ -6,7 +6,18 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "unsplash.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com", // Add your mock domain here
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com", // Recommended: if you plan to use Cloudinary later
+        pathname: "**",
       },
     ],
   },

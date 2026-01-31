@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Roles } from "@/constants/userRoles";
-import { userService } from "@/services/user.service";
+import { userService } from "@/services/userServices/user.service";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({

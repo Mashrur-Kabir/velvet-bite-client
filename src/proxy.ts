@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { userService } from "./services/user.service";
+import { userService } from "./services/userServices/user.service";
 import { Roles } from "./constants/userRoles";
 
 // role map
