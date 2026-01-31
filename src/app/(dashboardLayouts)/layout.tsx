@@ -1,10 +1,5 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { Navbar } from "@/components/layout/Navbar";
 import { Roles } from "@/constants/userRoles";
 import { userService } from "@/services/user.service";
 import { redirect } from "next/navigation";
@@ -18,10 +13,8 @@ export default async function DashboardLayout({
   providerSlot: React.ReactNode;
   customerSlot: React.ReactNode;
 }) {
-  // Fetch session data from backend service
   const { data } = await userService.getSession();
 
-  // Performance Guard: If no session, redirect to login server-side
   if (!data?.user) {
     redirect("/login");
   }
@@ -29,28 +22,27 @@ export default async function DashboardLayout({
   const userRole = data.user.role;
 
   return (
-    <SidebarProvider>
-      {/* Pass the role to the Sidebar for dynamic route rendering */}
+    <div className="flex min-h-screen bg-[#1A0F0D]">
+      {/* Custom Sidebar - Fixed width 72 (18rem) */}
       <AppSidebar user={{ role: userRole }} />
 
-      <SidebarInset className="bg-background">
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/50 px-6 sticky top-0 bg-background/80 backdrop-blur-md z-10">
-          <SidebarTrigger className="-ml-1 text-primary hover:bg-primary/10 transition-colors" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <div className="flex-1">
-            <span className="text-xs text-muted-foreground uppercase tracking-tighter">
-              Velvet Bite Dashboard / {userRole}
+      {/* Main Content Area - Margin left to make room for fixed sidebar */}
+      <div className="flex flex-1 flex-col ml-72">
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-caramel/5 bg-[#1A0F0D]/80 px-8 backdrop-blur-md">
+          <div className="text-[10px] font-serif uppercase tracking-[0.3em] text-caramel/60">
+            Dashboard /{" "}
+            <span className="text-caramel italic">
+              {userRole.toLowerCase()}
             </span>
           </div>
         </header>
 
-        {/* Role-based Slot Rendering */}
-        <main className="flex flex-1 flex-col gap-4 p-6 bg-muted/20">
+        <main className="flex-1 p-8 overflow-y-auto">
           {userRole === Roles.admin && adminSlot}
           {userRole === Roles.provider && providerSlot}
           {userRole === Roles.customer && customerSlot}
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </div>
   );
 }

@@ -1,8 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link"; // 1. Added Link import
-import { Menu, UtensilsCrossed, Store, Info, PhoneCall } from "lucide-react";
+import Link from "next/link";
+import {
+  Menu,
+  UtensilsCrossed,
+  Store,
+  Info,
+  PhoneCall,
+  LogOut,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -28,8 +35,10 @@ import {
 import { ModeToggle } from "./ModeToggle";
 import { useMounted } from "@/hooks/useMounted";
 import { motion } from "framer-motion";
+import { authClient } from "@/lib/auth-client"; // Import auth client
+import { Roles } from "@/constants/userRoles"; // Import Roles
+import { useRouter, usePathname } from "next/navigation";
 
-// Create a motion-enabled Link for the logo
 const MotionLink = motion.create(Link);
 
 interface MenuItem {
@@ -40,12 +49,38 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
-interface NavbarProps {
-  className?: string;
-}
-
-const Navbar = ({ className }: NavbarProps) => {
+const Navbar = ({ className }: { className?: string }) => {
   const isMounted = useMounted();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // 1. Get Session state from Better Auth
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
+  // 2. Dynamic Dashboard Route Logic
+  const getDashboardUrl = () => {
+    if (!user) return "/login";
+    switch (user.role) {
+      case Roles.admin:
+        return "/admin-dashboard";
+      case Roles.provider:
+        return "/provider-dashboard";
+      default:
+        return "/dashboard"; // Default for CUSTOMER
+    }
+  };
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login");
+          router.refresh();
+        },
+      },
+    });
+  };
 
   const logo = {
     url: "/",
@@ -92,10 +127,6 @@ const Navbar = ({ className }: NavbarProps) => {
         },
       ],
     },
-    {
-      title: "My Orders",
-      url: "/orders",
-    },
   ];
 
   return (
@@ -105,10 +136,8 @@ const Navbar = ({ className }: NavbarProps) => {
         className,
       )}
     >
-      <div className="container mx-auto flex items-center justify-between">
-        {/* Left Side: Logo & Desktop Navigation */}
+      <div className="container mx-auto flex items-center justify-between px-4">
         <div className="flex items-center gap-8">
-          {/* 2. Updated Logo Link to use MotionLink */}
           <MotionLink
             href={logo.url}
             className="flex items-center"
@@ -116,7 +145,6 @@ const Navbar = ({ className }: NavbarProps) => {
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <Image
               src={logo.src}
@@ -128,34 +156,76 @@ const Navbar = ({ className }: NavbarProps) => {
             />
           </MotionLink>
 
-          {/* Desktop Nav */}
           <nav className="hidden lg:block">
             {isMounted && (
               <NavigationMenu>
                 <NavigationMenuList>
                   {menu.map((item) => renderMenuItem(item))}
+                  {/* 3. Add Dashboard to main menu if logged in */}
+                  {user && (
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        asChild
+                        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-primary font-bold"
+                      >
+                        <Link href={getDashboardUrl()}>Dashboard</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  )}
                 </NavigationMenuList>
               </NavigationMenu>
             )}
           </nav>
         </div>
 
-        {/* Right Side: Auth & Theme Toggle */}
         <div className="flex items-center gap-3">
           {isMounted ? <ModeToggle /> : <div className="size-10" />}
 
           <nav className="hidden lg:flex items-center gap-3">
-            {/* 3. Updated Auth buttons to use Link */}
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button
-              asChild
-              size="sm"
-              className="bg-primary hover:bg-amber-800 hover:text-white text-primary-foreground"
-            >
-              <Link href="/register">Register</Link>
-            </Button>
+            {/* 4. Conditional Auth Buttons */}
+            {!user ? (
+              <>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "relative h-9 px-4 hover:bg-transparent group", // Removed default hover background
+                    // The Underline Logic:
+                    "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
+                    // Active state vs Hover state:
+                    pathname === "/login"
+                      ? "after:w-full"
+                      : "after:w-0 hover:after:w-full",
+                  )}
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-primary hover:bg-amber-700 hover:text-white text-black rounded-lg transition-shadow"
+                >
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="group relative w-32 overflow-hidden rounded-xl border-caramel/50 text-brownie transition-all hover:bg-destructive hover:text-white"
+              >
+                {/* The Icon: Starts on the left, moves to center on hover */}
+                <LogOut className="absolute left-4 size-4 transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2" />
+
+                {/* The Text: Fades out and slides to the right on hover */}
+                <span className="ml-6 transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0">
+                  Sign Out
+                </span>
+              </Button>
+            )}
           </nav>
 
           {/* Mobile Menu */}
@@ -168,7 +238,7 @@ const Navbar = ({ className }: NavbarProps) => {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right">
-                  <SheetHeader className="flex flex-row items-center gap-2">
+                  <SheetHeader className="mb-4">
                     <Image
                       src={logo.src}
                       alt={logo.alt}
@@ -177,17 +247,62 @@ const Navbar = ({ className }: NavbarProps) => {
                       className="object-contain"
                     />
                   </SheetHeader>
-                  <div className="flex flex-col gap-6 mt-8">
+                  <div className="flex flex-col gap-6">
                     <Accordion type="single" collapsible className="w-full">
                       {menu.map((item) => renderMobileMenuItem(item))}
+                      {user && (
+                        <Link
+                          href={getDashboardUrl()}
+                          className="text-md font-bold py-3 block text-primary"
+                        >
+                          Go to Dashboard
+                        </Link>
+                      )}
                     </Accordion>
                     <div className="flex flex-col gap-3 pt-4 border-t">
-                      <Button asChild variant="outline">
-                        <Link href="/login">Login</Link>
-                      </Button>
-                      <Button asChild>
-                        <Link href="/register">Sign up</Link>
-                      </Button>
+                      {!user ? (
+                        <>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size="sm"
+                            className={cn(
+                              "relative h-9 px-4 hover:bg-transparent group", // Removed default hover background
+                              // The Underline Logic:
+                              "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
+                              // Active state vs Hover state:
+                              pathname === "/login"
+                                ? "after:w-full"
+                                : "after:w-0 hover:after:w-full",
+                            )}
+                          >
+                            <Link href="/login">Login</Link>
+                          </Button>
+
+                          <Button
+                            asChild
+                            size="sm"
+                            className="bg-primary hover:bg-amber-700 hover:text-white text-black rounded-lg transition-shadow"
+                          >
+                            <Link href="/register">Register</Link>
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleSignOut}
+                          className="group relative w-20 overflow-hidden rounded-xl border-caramel/50 text-brownie transition-all hover:bg-destructive hover:text-white"
+                        >
+                          {/* The Icon: Starts on the left, moves to center on hover */}
+                          <LogOut className="absolute left-4 size-4 transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2" />
+
+                          {/* The Text: Fades out and slides to the right on hover */}
+                          <span className="ml-6 transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0">
+                            Sign Out
+                          </span>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </SheetContent>
@@ -205,10 +320,9 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-brownie/80 dark:text-cream/80 hover:bg-brownie hover:text-cream data-[state=open]:bg-brownie data-[state=open]:text-cream">
+        <NavigationMenuTrigger className="text-brownie/80 dark:text-cream/80 hover:text-primary">
           {item.title}
         </NavigationMenuTrigger>
-
         <NavigationMenuContent>
           <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-card">
             {item.items.map((subItem) => (
@@ -223,14 +337,9 @@ const renderMenuItem = (item: MenuItem) => {
   }
   return (
     <NavigationMenuItem key={item.title}>
-      {/* 4. Using Link inside NavigationMenuLink via asChild */}
       <NavigationMenuLink
         asChild
-        className={cn(
-          "group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors cursor-pointer",
-          "text-brownie dark:text-cream",
-          "after:absolute after:bottom-1 after:left-1/2 after:h-[2px] after:w-0 after:-translate-x-1/2 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full",
-        )}
+        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-brownie dark:text-cream"
       >
         <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>
@@ -242,7 +351,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <AccordionItem key={item.title} value={item.title} className="border-b-0">
-        <AccordionTrigger className="text-md py-3 font-semibold hover:no-underline hover:text-primary transition-colors">
+        <AccordionTrigger className="text-md py-3 font-semibold hover:text-primary">
           {item.title}
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-2">
@@ -263,10 +372,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
     <Link
       key={item.title}
       href={item.url}
-      className={cn(
-        "relative text-md font-semibold py-3 block w-fit transition-colors",
-        "after:absolute after:bottom-2 after:left-0 after:h-[2px] after:w-0 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full",
-      )}
+      className="relative text-md font-semibold py-3 block w-fit"
     >
       {item.title}
     </Link>
@@ -277,17 +383,15 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <Link
       href={item.url}
-      className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-brownie group"
+      className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors hover:bg-brownie group"
     >
-      <div className="text-primary group-hover:text-cream transition-colors">
-        {item.icon}
-      </div>
+      <div className="text-primary group-hover:text-cream">{item.icon}</div>
       <div>
-        <div className="text-sm font-semibold group-hover:text-cream transition-colors">
+        <div className="text-sm font-semibold group-hover:text-cream">
           {item.title}
         </div>
         {item.description && (
-          <p className="text-sm leading-snug text-muted-foreground mt-1 group-hover:text-cream/80 transition-colors">
+          <p className="text-sm leading-snug text-muted-foreground mt-1 group-hover:text-cream/80">
             {item.description}
           </p>
         )}

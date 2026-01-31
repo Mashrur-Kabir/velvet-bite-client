@@ -1,21 +1,14 @@
 import { RouteGroup } from "@/types";
+import { LayoutDashboard, ShoppingBag, History, User } from "lucide-react";
 
-export const userRoutes: RouteGroup[] = [
+export const customerRoutes: RouteGroup[] = [
   {
-    title: "Blog Management",
+    title: "Customer Portal",
     items: [
-      {
-        title: "user dashboard",
-        url: "/dashboard",
-      },
-      {
-        title: "create blogs",
-        url: "/dashboard/create-blogs",
-      },
-      {
-        title: "history",
-        url: "/dashboard/history",
-      },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "My Orders", url: "/dashboard/orders", icon: ShoppingBag },
+      { title: "Order History", url: "/dashboard/history", icon: History },
+      { title: "Profile Settings", url: "/dashboard/profile", icon: User },
     ],
   },
 ];
