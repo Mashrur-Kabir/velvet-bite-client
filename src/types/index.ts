@@ -1,2 +1,6 @@
 export type * from "./routes.type";
 export type * from "./global.types";
+export type * from "./moduleTypes/meal.type";
+export type * from "./moduleTypes/provider.type";
+export type * from "./moduleTypes/signup.type";
+export type * from "./moduleTypes/category.type";

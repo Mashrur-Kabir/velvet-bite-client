@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MealCard } from "@/components/modules/homepage/MealCard";
+import { TrendingMealCard } from "@/components/modules/homepage/TrendingMealCard";
 import { cn } from "@/lib/utils";
 
 // Mock Data for "Trending Now" Section
@@ -189,7 +189,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {TRENDING_MEALS.map((meal) => (
-              <MealCard key={meal.id} meal={meal} />
+              <TrendingMealCard key={meal.id} meal={meal} />
             ))}
           </div>
         </section>

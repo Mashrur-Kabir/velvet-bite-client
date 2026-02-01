@@ -9,6 +9,7 @@ import {
   Info,
   PhoneCall,
   LogOut,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -96,6 +97,12 @@ const Navbar = ({ className }: { className?: string }) => {
       url: "/meals",
       items: [
         {
+          title: "See Categories",
+          description: "Enjoy browsing our categories to suit your cravings",
+          icon: <ClipboardList className="size-5 shrink-0" />,
+          url: "/categories",
+        },
+        {
           title: "Browse Meals",
           description: "Discover delicious meals from top-rated providers.",
           icon: <UtensilsCrossed className="size-5 shrink-0" />,
@@ -132,7 +139,7 @@ const Navbar = ({ className }: { className?: string }) => {
   return (
     <section
       className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4",
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur `supports-backdrop-filter:bg-background/60` py-4",
         className,
       )}
     >
@@ -166,7 +173,7 @@ const Navbar = ({ className }: { className?: string }) => {
                     <NavigationMenuItem>
                       <NavigationMenuLink
                         asChild
-                        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-primary font-bold"
+                        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-cream"
                       >
                         <Link href={getDashboardUrl()}>Dashboard</Link>
                       </NavigationMenuLink>
@@ -253,7 +260,7 @@ const Navbar = ({ className }: { className?: string }) => {
                       {user && (
                         <Link
                           href={getDashboardUrl()}
-                          className="text-md font-bold py-3 block text-primary"
+                          className="text-md font-bold py-3 block text-cream"
                         >
                           Go to Dashboard
                         </Link>
@@ -320,7 +327,7 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-brownie/80 dark:text-cream/80 hover:text-primary">
+        <NavigationMenuTrigger className="text-brownie/80 dark:text-cream dark:hover:text-white hover:text-primary">
           {item.title}
         </NavigationMenuTrigger>
         <NavigationMenuContent>
@@ -339,7 +346,7 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         asChild
-        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-brownie dark:text-cream"
+        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-brownie dark:text-cream dark:hover:text-white"
       >
         <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>

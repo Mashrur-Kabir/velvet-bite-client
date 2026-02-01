@@ -17,7 +17,7 @@ interface MealProps {
   prepTime: string;
 }
 
-export function MealCard({ meal }: { meal: MealProps }) {
+export function TrendingMealCard({ meal }: { meal: MealProps }) {
   return (
     <motion.div
       whileHover={{ y: -8 }}

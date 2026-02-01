@@ -3,8 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { ChevronLeft } from "lucide-react";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { providerRoutes } from "@/routes/providerRoutes";
 import { customerRoutes } from "@/routes/customerRoutes";
@@ -70,7 +70,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         {/* Header Area */}
         <div className="mb-12 px-2 pt-4">
           <Link href="/" className="flex items-center gap-4">
-            <div className="size-10 min-w-10 rounded-xl bg-caramel shadow-lg shadow-caramel/20 flex items-center justify-center font-serif text-brownie text-xl font-bold">
+            <div className="size-10 min-w-10 bg-accent shadow-lg shadow-caramel/20 flex items-center justify-center font-serif text-cream border-cream rounded-xl text-xl font-bold">
               V
             </div>
             {!isCollapsed && (

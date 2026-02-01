@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { Roles } from "@/constants/userRoles";
-import { SignUpParams } from "@/types/signup";
+import { SignUpParams } from "@/types/moduleTypes/signup.type";
 import { useRouter } from "next/navigation";
 
 const formSchema = z

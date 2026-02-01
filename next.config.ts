@@ -11,12 +11,17 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "example.com", // Add your mock domain here
+        hostname: "images.unsplash.com", // Add this specific hostname
         pathname: "**",
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // Recommended: if you plan to use Cloudinary later
+        hostname: "example.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
         pathname: "**",
       },
     ],
