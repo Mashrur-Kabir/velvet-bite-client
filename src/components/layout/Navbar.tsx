@@ -10,6 +10,7 @@ import {
   PhoneCall,
   LogOut,
   ClipboardList,
+  Beef,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -114,6 +115,12 @@ const Navbar = ({ className }: { className?: string }) => {
           icon: <Store className="size-5 shrink-0" />,
           url: "/providers",
         },
+        {
+          title: "Start Ordering",
+          description: "Choose a kitchen to order from your home",
+          icon: <Beef className="size-5 shrink-0" />,
+          url: "/order",
+        },
       ],
     },
     {
@@ -197,10 +204,9 @@ const Navbar = ({ className }: { className?: string }) => {
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "relative h-9 px-4 hover:bg-transparent group", // Removed default hover background
-                    // The Underline Logic:
+                    "relative h-9 px-4 group",
+                    "hover:bg-primary-foreground",
                     "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
-                    // Active state vs Hover state:
                     pathname === "/login"
                       ? "after:w-full"
                       : "after:w-0 hover:after:w-full",
@@ -212,7 +218,7 @@ const Navbar = ({ className }: { className?: string }) => {
                 <Button
                   asChild
                   size="sm"
-                  className="bg-primary hover:bg-amber-700 hover:text-white text-black rounded-lg transition-shadow"
+                  className="bg-primary hover:bg-accent hover:text-white font-bold text-black rounded-lg transition-shadow"
                 >
                   <Link href="/register">Register</Link>
                 </Button>
@@ -274,10 +280,9 @@ const Navbar = ({ className }: { className?: string }) => {
                             variant="ghost"
                             size="sm"
                             className={cn(
-                              "relative h-9 px-4 hover:bg-transparent group", // Removed default hover background
-                              // The Underline Logic:
+                              "relative h-9 px-4 group",
+                              "hover:bg-primary-foreground",
                               "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
-                              // Active state vs Hover state:
                               pathname === "/login"
                                 ? "after:w-full"
                                 : "after:w-0 hover:after:w-full",
@@ -289,7 +294,7 @@ const Navbar = ({ className }: { className?: string }) => {
                           <Button
                             asChild
                             size="sm"
-                            className="bg-primary hover:bg-amber-700 hover:text-white text-black rounded-lg transition-shadow"
+                            className="bg-primary hover:bg-accent hover:text-white text-black rounded-lg transition-shadow"
                           >
                             <Link href="/register">Register</Link>
                           </Button>
