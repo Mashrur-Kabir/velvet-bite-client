@@ -20,6 +20,14 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string;
   items: IOrderItem[];
+  // Added explicit types for the joined relations
+  customer?: {
+    name: string;
+    email: string;
+  };
+  provider?: {
+    name: string;
+  };
 }
 
 export interface ICreateOrderPayload {

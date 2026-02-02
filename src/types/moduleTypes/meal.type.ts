@@ -52,3 +52,11 @@ export interface ICreateMealPayload {
   categoryId: string;
   imageUrl: string;
 }
+
+// Add Update Payload
+export interface IUpdateMealPayload {
+  name?: string;
+  description?: string;
+  price?: number;
+  isAvailable?: boolean;
+}

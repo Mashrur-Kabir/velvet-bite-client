@@ -28,7 +28,7 @@ export const providerRoutes: RouteGroup[] = [
       },
       {
         title: "My Orders",
-        url: "/provider-dashboard/orders",
+        url: "/provider-dashboard/my-orders",
         icon: ClipboardList,
       },
       {
