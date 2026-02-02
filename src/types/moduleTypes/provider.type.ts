@@ -15,3 +15,10 @@ export interface IProviderResponse {
   message: string;
   data: IProvider[];
 }
+
+export interface ICreateProviderPayload {
+  name: string;
+  description: string;
+  address: string;
+  phone: string;
+}

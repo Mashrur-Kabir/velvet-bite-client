@@ -44,3 +44,11 @@ export interface IMealResponse {
   };
   data: IMeal[];
 }
+
+export interface ICreateMealPayload {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: string;
+  imageUrl: string;
+}

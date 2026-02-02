@@ -4,6 +4,7 @@ import {
   ICreateReviewPayload,
   IOrder,
   IReview,
+  IUser,
   ServiceResponse,
 } from "@/types";
 import { cookies } from "next/headers";
@@ -175,6 +176,49 @@ export const customerService = {
               : "An unknown error occurred. Cannot delete review",
         },
       };
+    }
+  },
+
+  // NEW: Profile Fetcher
+  getMyProfile: async function (): Promise<ServiceResponse<IUser>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/users/me`, {
+        method: "GET",
+        headers: { Cookie: cookieStore.toString() },
+        next: { tags: ["user-profile"] },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch profile");
+
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Connection Error" } };
+    }
+  },
+
+  // NEW: Profile Updater
+  updateProfile: async function (
+    payload: Partial<{ name: string; phone: string; image: string }>,
+  ): Promise<ServiceResponse<IUser>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/users/update-me`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Update failed");
+
+      return { data: data.data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Update failed" } };
     }
   },
 };

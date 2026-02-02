@@ -1,40 +1,27 @@
 import { env } from "@/env";
+import { ServiceResponse, IUserSessionResponse } from "@/types";
 import { cookies } from "next/headers";
 
 const AUTH_URL = env.AUTH_URL;
 
 export const userService = {
-  getSession: async function () {
+  // Existing Session Fetcher
+  getSession: async function (): Promise<
+    ServiceResponse<IUserSessionResponse>
+  > {
     try {
       const cookieStore = await cookies();
-
-      console.log(cookieStore.toString());
-
       const res = await fetch(`${AUTH_URL}/get-session`, {
-        headers: {
-          cookie: cookieStore.toString(),
-        },
+        headers: { cookie: cookieStore.toString() },
         cache: "no-store",
       });
 
       const session = await res.json();
-      console.log(session);
-
-      if (session === null) {
-        return {
-          data: null,
-          error: {
-            message: "Session is missing.",
-          },
-        };
-      }
+      if (!session) throw new Error("Session is missing.");
 
       return { data: session, error: null };
     } catch (error) {
-      return {
-        data: null,
-        error: error,
-      };
+      return { data: null, error: { message: "Unauthorized" } };
     }
   },
 };

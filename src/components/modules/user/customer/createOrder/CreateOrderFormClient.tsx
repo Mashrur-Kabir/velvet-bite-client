@@ -7,7 +7,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -25,11 +30,25 @@ import {
 } from "lucide-react";
 import { createOrderAction } from "@/actions/customer.action";
 import { IMeal, IProvider } from "@/types";
+import * as z from "zod";
 
 interface Props {
   providers: IProvider[];
   allMeals: IMeal[];
 }
+
+// 1. Order Schema with Zod
+const orderSchema = z.object({
+  deliveryAddress: z.string().min(5, "Delivery address is required"),
+  items: z
+    .array(
+      z.object({
+        mealId: z.string().min(1, "Please select a meal"),
+        quantity: z.number().min(1, "Quantity must be at least 1"),
+      }),
+    )
+    .min(1, "At least one item is required"),
+});
 
 export default function CreateOrderFormClient({ providers, allMeals }: Props) {
   const [selectedProviderId, setSelectedProviderId] = useState<string>("");
@@ -43,6 +62,8 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
       deliveryAddress: "",
       items: [{ mealId: "", quantity: 1 }],
     },
+    // 2. Integrated Zod Validation
+    validators: { onChange: orderSchema },
     onSubmit: async ({ value }) => {
       const validItems = value.items.filter((item) => item.mealId !== "");
 
@@ -77,7 +98,6 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
           color: "#F3E9DC", // Cream
           border: "1px solid #C08552", // Caramel
           padding: "16px",
-          // 2. Updated to light beige/caramel glow
           boxShadow: "0 0 15px rgba(192, 133, 82, 0.3)",
         },
       });
@@ -157,7 +177,6 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
                         </span>
                       </div>
 
-                      {/* FIX 1: Alignment fixed by moving button inside header flexbox */}
                       <form.Subscribe
                         selector={(state) => [state.values.items]}
                       >
@@ -183,7 +202,6 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
                     </div>
 
                     <div className="space-y-4">
-                      {/* FIX 2: Subscribe to items to ensure instant UI updates */}
                       <form.Subscribe
                         selector={(state) => [state.values.items]}
                       >
@@ -220,6 +238,13 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
                                           ))}
                                         </SelectContent>
                                       </Select>
+                                      {field.state.meta.isTouched &&
+                                        field.state.meta.errors.length > 0 && (
+                                          <FieldError
+                                            errors={field.state.meta.errors}
+                                            className="text-[10px] text-cream italic"
+                                          />
+                                        )}
                                     </Field>
                                   )}
                                 </form.Field>
@@ -288,20 +313,37 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
                             className="bg-black/20 border-caramel/10 rounded-2xl h-14 text-cream"
                             placeholder="Enter your location please..."
                             value={field.state.value || ""}
+                            onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value)}
                           />
+                          {field.state.meta.isTouched &&
+                            field.state.meta.errors.length > 0 && (
+                              <FieldError
+                                errors={field.state.meta.errors}
+                                className="text-[10px] text-cream italic"
+                              />
+                            )}
                         </Field>
                       )}
                     </form.Field>
                   </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full h-16 bg-primary hover:bg-amber-900 text-white font-serif text-xl font-bold rounded-2xl shadow-xl transition-all group transform-gpu will-change-transform"
+                  <form.Subscribe
+                    selector={(state) => [state.canSubmit, state.isSubmitting]}
                   >
-                    Place Order{" "}
-                    <ShoppingBag className="ml-3 transition-transform group-hover:scale-125" />
-                  </Button>
+                    {([canSubmit, isSubmitting]) => (
+                      <Button
+                        type="submit"
+                        disabled={!canSubmit || isSubmitting}
+                        className="w-full h-16 bg-primary hover:bg-amber-900 text-white font-serif text-xl font-bold rounded-2xl shadow-xl transition-all group transform-gpu will-change-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isSubmitting ? "Processing..." : "Place Order"}
+                        {!isSubmitting && (
+                          <ShoppingBag className="ml-3 transition-transform group-hover:scale-125" />
+                        )}
+                      </Button>
+                    )}
+                  </form.Subscribe>
                 </motion.div>
               )}
             </AnimatePresence>

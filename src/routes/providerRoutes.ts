@@ -4,6 +4,7 @@ import {
   Utensils,
   ClipboardList,
   Settings,
+  Menu,
 } from "lucide-react";
 
 export const providerRoutes: RouteGroup[] = [
@@ -15,15 +16,24 @@ export const providerRoutes: RouteGroup[] = [
         url: "/provider-dashboard",
         icon: LayoutDashboard,
       },
-      { title: "Manage Menu", url: "/provider-dashboard/menu", icon: Utensils },
       {
-        title: "Incoming Orders",
+        title: "Create Menu",
+        url: "/provider-dashboard/create-menu",
+        icon: Utensils,
+      },
+      {
+        title: "My Menu",
+        url: "/provider-dashboard/my-menu",
+        icon: Menu,
+      },
+      {
+        title: "My Orders",
         url: "/provider-dashboard/orders",
         icon: ClipboardList,
       },
       {
-        title: "Store Settings",
-        url: "/provider-dashboard/settings",
+        title: "Profile",
+        url: "/provider-dashboard/profile",
         icon: Settings,
       },
     ],

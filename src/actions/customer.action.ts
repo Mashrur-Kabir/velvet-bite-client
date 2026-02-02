@@ -43,3 +43,16 @@ export const deleteReviewAction = async (reviewId: string) => {
   if (!res.error) revalidateTag("reviews", "max");
   return res;
 };
+
+export const getMyProfileAction = async () => {
+  return await customerService.getMyProfile();
+};
+
+export const updateProfileAction = async (
+  payload: Partial<{ name: string; phone: string; image: string }>,
+) => {
+  const res = await customerService.updateProfile(payload);
+  // Revalidate the profile tag to ensure UI updates across the dashboard
+  if (res.data) revalidateTag("user-profile", "max");
+  return res;
+};

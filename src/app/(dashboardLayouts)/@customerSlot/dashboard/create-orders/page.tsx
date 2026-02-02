@@ -42,7 +42,7 @@ export default async function CreateOrdersPage() {
             orders.slice(0, 5).map((order, idx) => (
               <div
                 key={order.id}
-                className="group relative p-6 bg-[#2D1B16]/20 border border-caramel/5 rounded-[2rem] flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-500 hover:border-caramel/30 hover:bg-[#2D1B16]/40 overflow-hidden"
+                className="group relative p-6 bg-[#2D1B16]/20 border border-caramel/5 rounded-[2rem] flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-500 hover:border-caramel/30 hover:bg-[#654321] overflow-hidden"
               >
                 {/* Visual Accent */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-caramel/0 group-hover:bg-caramel transition-all duration-500" />
@@ -57,7 +57,7 @@ export default async function CreateOrdersPage() {
                     </p>
                     <div className="flex items-center gap-2 text-cream font-medium italic">
                       <MapPin size={12} className="text-caramel/40" />
-                      <span className="truncate max-w-[200px] md:max-w-md">
+                      <span className="truncate max-w-[200px] md:max-w-md pr-2">
                         {order.deliveryAddress}
                       </span>
                     </div>
