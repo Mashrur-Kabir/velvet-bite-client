@@ -206,7 +206,7 @@ const Navbar = ({ className }: { className?: string }) => {
                   className={cn(
                     "relative h-9 px-4 group",
                     "hover:bg-primary-foreground",
-                    "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
+                    "after:absolute after:bottom-1 after:left-0 after:h-0.5 after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
                     pathname === "/login"
                       ? "after:w-full"
                       : "after:w-0 hover:after:w-full",
@@ -336,7 +336,7 @@ const renderMenuItem = (item: MenuItem) => {
           {item.title}
         </NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-card">
+          <ul className="grid w-100 gap-3 p-4 md:w-125 md:grid-cols-2 lg:w-150 bg-card">
             {item.items.map((subItem) => (
               <NavigationMenuLink asChild key={subItem.title}>
                 <SubMenuLink item={subItem} />

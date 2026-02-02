@@ -1,5 +1,11 @@
 import { env } from "@/env";
-import { ICreateOrderPayload, IOrder, ServiceResponse } from "@/types";
+import {
+  ICreateOrderPayload,
+  ICreateReviewPayload,
+  IOrder,
+  IReview,
+  ServiceResponse,
+} from "@/types";
 import { cookies } from "next/headers";
 
 const API_URL = env.BACKEND_URL;
@@ -37,7 +43,7 @@ export const customerService = {
   getMyOrders: async function (): Promise<ServiceResponse<IOrder[]>> {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${API_URL}/my-orders`, {
+      const res = await fetch(`${API_URL}/orders/my-orders`, {
         method: "GET",
         headers: {
           Cookie: cookieStore.toString(),
@@ -55,6 +61,118 @@ export const customerService = {
             error instanceof Error
               ? error.message
               : "An unknown error occurred",
+        },
+      };
+    }
+  },
+
+  updateOrderStatus: async function (
+    orderId: string,
+    status: "CANCELLED",
+  ): Promise<ServiceResponse<IOrder>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to update status");
+      return { data: data.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Error. Can't update order status",
+        },
+      };
+    }
+  },
+
+  createReview: async function (
+    reviewData: ICreateReviewPayload,
+  ): Promise<ServiceResponse<IReview>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Review submission failed");
+      return { data: data.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Due to an unknown error, review cannot be created. Try again later",
+        },
+      };
+    }
+  },
+
+  getMyReviews: async function (): Promise<ServiceResponse<IReview[]>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/reviews/my-reviews`, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        next: { tags: ["reviews"] }, // Revalidates when a new review is created
+      });
+
+      const data = await res.json();
+      return { data: data.data || [], error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Review cannot be fetched. Try again later",
+        },
+      };
+    }
+  },
+
+  deleteReview: async function (
+    reviewId: string,
+  ): Promise<ServiceResponse<null>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: { Cookie: cookieStore.toString() },
+      });
+
+      if (!res.ok) throw new Error("Could not erase review");
+      return { data: null, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred. Cannot delete review",
         },
       };
     }

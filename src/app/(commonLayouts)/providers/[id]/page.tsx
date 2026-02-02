@@ -41,7 +41,7 @@ export default async function ProviderDetailsPage({ params }: Props) {
           <div className="mx-auto size-24 rounded-[2rem] bg-caramel flex items-center justify-center text-brownie shadow-[0_20px_50px_rgba(192,133,82,0.2)] transition-shadow duration-300 ease-in-out hover:shadow-[0_0_50px_rgba(192,133,82,0.6)]">
             <ChefHat className="size-12" />
           </div>
-          <div className="space-y-20 text-center">
+          <div className="space-y-10 text-center">
             {/* 1. THE TITLE: Smooth Blur-to-Focus Entrance */}
             <h1 className="text-5xl md:text-8xl font-serif font-bold text-cream tracking-tighter animate-velvet-title">
               {provider.name}

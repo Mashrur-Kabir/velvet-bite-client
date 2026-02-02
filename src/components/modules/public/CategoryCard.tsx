@@ -27,11 +27,11 @@ export default function CategoryCard({ category, index }: CategoryCardProps) {
     >
       <Link
         href={`/meals?categoryId=${category.id}`}
-        className="group relative flex flex-col justify-between h-64 p-8 rounded-[2rem] border border-caramel/10 bg-[#2D1B16]/40 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-caramel/40 hover:bg-[#2D1B16]/80 shadow-xl"
+        className="group relative flex flex-col justify-between h-64 p-8 rounded-4xl border border-caramel/10 bg-[#2D1B16]/40 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-caramel/40 hover:bg-[#2D1B16]/80 shadow-xl"
       >
         {/* Unique Background Watermark */}
         <div className="absolute -right-4 -top-8 select-none pointer-events-none">
-          <span className="text-[12rem] font-serif font-bold text-caramel/[0.03] group-hover:text-caramel/[0.06] transition-colors duration-700 leading-none">
+          <span className="text-[12rem] font-serif font-bold text-caramel/3 group-hover:text-caramel/6 transition-colors duration-700 leading-none">
             {firstLetter}
           </span>
         </div>
@@ -64,7 +64,7 @@ export default function CategoryCard({ category, index }: CategoryCardProps) {
         </div>
 
         {/* Animated Velvet Gradient Ring */}
-        <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-caramel/10 rounded-[2rem] transition-all duration-700 pointer-events-none" />
+        <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-caramel/10 rounded-4xl transition-all duration-700 pointer-events-none" />
       </Link>
     </motion.div>
   );

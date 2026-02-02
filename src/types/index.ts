@@ -5,3 +5,4 @@ export type * from "./moduleTypes/provider.type";
 export type * from "./moduleTypes/signup.type";
 export type * from "./moduleTypes/category.type";
 export type * from "./moduleTypes/order.type";
+export type * from "./moduleTypes/review.type";

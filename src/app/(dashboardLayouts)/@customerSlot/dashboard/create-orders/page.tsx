@@ -17,7 +17,7 @@ export default async function CreateOrdersPage() {
   const orders = ordersRes.data || [];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-16 pb-20">
+    <div className="max-w-5xl mx-auto space-y-16 py-12">
       {/* 2. Order Creation Module */}
       <CreateOrderFormServer providers={providers} allMeals={allMeals} />
 

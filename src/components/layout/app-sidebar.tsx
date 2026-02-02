@@ -110,7 +110,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       className={cn(
                         "group relative flex h-12 items-center gap-4 rounded-2xl px-4 transition-all duration-500",
                         isActive
-                          ? "bg-gradient-to-r from-primary to-amber-900 text-white shadow-xl shadow-black/20"
+                          ? "bg-linear-to-r from-primary to-amber-900 text-white shadow-xl shadow-black/20"
                           : "text-cream/60 hover:bg-caramel/5 hover:text-white",
                       )}
                     >
@@ -119,7 +119,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                           <Icon
                             className={cn(
                               "size-5 transition-all duration-700 ease-in-out",
-                              "group-hover:scale-125 group-hover:text-caramel group-hover:[filter:url(#velvet-glow)]",
+                              "group-hover:scale-125 group-hover:text-caramel group-hover:filter-[url(#velvet-glow)]",
                               isActive ? "text-white" : "text-caramel/60",
                             )}
                           />

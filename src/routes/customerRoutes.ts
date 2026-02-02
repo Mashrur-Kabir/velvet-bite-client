@@ -12,7 +12,7 @@ export const customerRoutes: RouteGroup[] = [
         icon: ListOrdered,
       },
       { title: "My Orders", url: "/dashboard/my-orders", icon: ShoppingBag },
-      { title: "Profile Settings", url: "/dashboard/profile", icon: User },
+      { title: "Profile", url: "/dashboard/profile", icon: User },
     ],
   },
 ];
