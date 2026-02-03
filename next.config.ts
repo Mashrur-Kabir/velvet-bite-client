@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "plus.unsplash.com", // This handles the premium_photo links
+      },
+      {
+        protocol: "https",
         hostname: "media.istockphoto.com",
         port: "",
         pathname: "/**",
