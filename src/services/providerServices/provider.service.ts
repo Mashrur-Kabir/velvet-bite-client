@@ -252,4 +252,34 @@ export const providerService = {
       };
     }
   },
+
+  updateMyProvider: async function (
+    payload: Partial<ICreateProviderPayload>,
+  ): Promise<ServiceResponse<IProvider>> {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/providers/me`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Profile update failed");
+      return { data: data.data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred. Try updating profile later",
+        },
+      };
+    }
+  },
 };

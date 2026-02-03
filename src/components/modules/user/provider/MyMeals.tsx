@@ -70,7 +70,7 @@ export default function MyMeals({ meals }: { meals: IMeal[] }) {
               {/* Controls */}
               <div className="flex gap-4 pt-4 border-t border-border/20">
                 <Link
-                  href={`/dashboard/provider-dashboard/my-menu/update-menu?mealId=${meal.id}`}
+                  href={`/provider-dashboard/my-menu/update-menu?mealId=${meal.id}`}
                   className="flex-1 h-12 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300 font-bold text-xs uppercase tracking-widest"
                 >
                   <Edit3 size={14} /> Update

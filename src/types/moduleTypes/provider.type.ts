@@ -1,3 +1,5 @@
+import { IMeal } from "./meal.type";
+
 export interface IProvider {
   id: string;
   userId: string;
@@ -8,6 +10,8 @@ export interface IProvider {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+
+  meals?: IMeal[]; // Added to support the /api/providers/me response
 }
 
 export interface IProviderResponse {

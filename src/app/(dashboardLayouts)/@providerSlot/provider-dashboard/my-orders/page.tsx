@@ -35,9 +35,11 @@ export default async function MyOrdersPage() {
                   <div className="flex items-center gap-3 text-[10px] uppercase font-bold tracking-widest mt-1">
                     <span
                       className={`px-2 py-1 rounded-md ${
-                        order.status === "PLACED"
-                          ? "bg-amber-500/10 text-amber-500"
-                          : "bg-primary/10 text-primary"
+                        order.status === "CANCELLED"
+                          ? "bg-rose-500/10 text-rose-500 border border-rose-500/20" // Specialized for CANCELLED
+                          : order.status === "PLACED"
+                            ? "bg-amber-500/10 text-amber-500" // Existing PLACED style
+                            : "bg-primary/10 text-primary" // Default for PREPARING, READY, DELIVERED
                       }`}
                     >
                       {order.status}

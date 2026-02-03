@@ -7,9 +7,8 @@ export default async function UpdateMenuFormServer({
 }: {
   mealId: string;
 }) {
-  // Parallel fetch for meal details and categories
   const [mealRes, categoriesRes] = await Promise.all([
-    providerService.getMyMeals(), // We'll filter from the list or add a getSingleMeal service
+    providerService.getMyMeals(),
     publicService.getCategories(),
   ]);
 
@@ -26,5 +25,6 @@ export default async function UpdateMenuFormServer({
     );
   }
 
-  return <UpdateMenuFormClient meal={meal} />;
+  // Pass categories to the client
+  return <UpdateMenuFormClient meal={meal} categories={categories} />;
 }

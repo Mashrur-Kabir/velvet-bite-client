@@ -62,3 +62,11 @@ export const updateOrderStatusAction = async (id: string, status: string) => {
   }
   return res;
 };
+
+export const updateMyProviderAction = async (
+  payload: Partial<ICreateProviderPayload>,
+) => {
+  const res = await providerService.updateMyProvider(payload);
+  if (res.data) revalidateTag("provider-profile", "max");
+  return res;
+};

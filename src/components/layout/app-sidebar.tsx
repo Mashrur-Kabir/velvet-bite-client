@@ -52,15 +52,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={cn(
-          "absolute -right-4 top-12 z-50 flex size-8 items-center justify-center rounded-full border border-caramel/20",
-          "bg-caramel text-brownie shadow-[0_0_15px_rgba(192,133,82,0.4)]",
+          "absolute -right-4 top-12 z-50 flex size-8 items-center justify-center rounded-full border border-accent/20",
+          "bg-primary text-brownie shadow-[0_0_15px_rgba(192,133,82,0.4)]",
           "transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(192,133,82,0.6)] active:scale-95",
         )}
       >
         <motion.div
           animate={{ rotate: isCollapsed ? 180 : 0 }}
           transition={{ duration: 0.4 }}
-          className="flex items-center justify-center"
+          className="flex items-center justify-center text-primary-foreground"
         >
           <ChevronLeft size={18} strokeWidth={2.5} />
         </motion.div>

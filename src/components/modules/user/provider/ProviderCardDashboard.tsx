@@ -4,7 +4,7 @@ import { IProvider } from "@/types";
 import { motion } from "framer-motion";
 import { MapPin, Phone, ShieldCheck, Store } from "lucide-react";
 
-export default function ProviderProfileCard({
+export default function ProviderCardDashboard({
   provider,
 }: {
   provider: IProvider;

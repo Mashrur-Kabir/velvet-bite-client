@@ -33,7 +33,11 @@ const statusSchema = z.object({
 
 type TOrderStatus = z.infer<typeof statusSchema>["status"];
 
-export default function UpdateOrderFormClient({ order }: { order: IOrder }) {
+export default function UpdateIncomingOrderFormClient({
+  order,
+}: {
+  order: IOrder;
+}) {
   const router = useRouter();
 
   const form = useForm({
@@ -43,7 +47,7 @@ export default function UpdateOrderFormClient({ order }: { order: IOrder }) {
     validators: { onChange: statusSchema },
     onSubmit: async ({ value }) => {
       toast.promise(updateOrderStatusAction(order.id, value.status), {
-        loading: "Updating transmission protocol...",
+        loading: "Updating status of order...",
         success: (res) => {
           if (res.error) throw new Error(res.error.message);
 
@@ -119,7 +123,7 @@ export default function UpdateOrderFormClient({ order }: { order: IOrder }) {
                 {(field) => (
                   <Field className="space-y-6">
                     <FieldLabel className="text-cream text-[10px] uppercase tracking-[0.3em] font-bold block text-center">
-                      Select Operational Phase
+                      Select Order Phase
                     </FieldLabel>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -147,7 +151,7 @@ export default function UpdateOrderFormClient({ order }: { order: IOrder }) {
                     </div>
 
                     {field.state.meta.errors.length > 0 && (
-                      <p className="text-center text-xs text-rose-500 italic">
+                      <p className="text-center text-xs text-cream italic">
                         {field.state.meta.errors.join(", ")}
                       </p>
                     )}
@@ -162,12 +166,10 @@ export default function UpdateOrderFormClient({ order }: { order: IOrder }) {
                   <Button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="w-full h-16 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.3em] text-xs hover:text-cream transition-all duration-500 shadow-xl shadow-primary/10 group"
+                    className="w-full h-16 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-[0.3em] text-xs hover:bg-amber-900 hover:text-cream transition-all duration-500 shadow-xl shadow-primary/10 group"
                   >
                     <span className="flex items-center gap-3">
-                      {isSubmitting
-                        ? "Synchronizing..."
-                        : "Update Transmission Status"}
+                      {isSubmitting ? "Synchronizing..." : "Update Status"}
                       {!isSubmitting && (
                         <ArrowRight
                           size={16}

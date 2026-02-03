@@ -1,7 +1,7 @@
 import { providerService } from "@/services/providerServices/provider.service";
-import UpdateOrderFormClient from "./UpdateOrderFormClient";
+import UpdateIncomingOrderFormClient from "./UpdateIncomingOrderFormClient";
 
-export default async function UpdateOrderFormServer({
+export default async function UpdateIncomingOrderFormServer({
   orderId,
 }: {
   orderId: string;
@@ -17,5 +17,5 @@ export default async function UpdateOrderFormServer({
     );
   }
 
-  return <UpdateOrderFormClient order={order} />;
+  return <UpdateIncomingOrderFormClient order={order} />;
 }
