@@ -6,6 +6,10 @@ export interface IReview {
   comment: string;
   isHidden: boolean; // Added per backend response
   createdAt: string;
+  user?: {
+    name: string;
+    email: string;
+  };
   meal?: {
     name: string;
     imageUrl: string;

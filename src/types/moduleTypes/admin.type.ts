@@ -11,3 +11,7 @@ export interface IAllUsersResponse {
   message: string;
   data: IUser[];
 }
+
+export interface IReviewVisibilityPayload {
+  isHidden: boolean;
+}
