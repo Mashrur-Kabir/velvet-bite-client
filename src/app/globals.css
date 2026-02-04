@@ -74,7 +74,7 @@
   /* In Dark Mode, we swap roles but keep the warm 'Hue' */
   --background: oklch(0.22 0.04 45); /* Deep Brownie/Roasted Coffee base */
   --foreground: oklch(0.92 0.03 65); /* Creamy text on dark bg */
-  --card: oklch(40.934% 0.10003 44.547); /* Slightly lighter roasted bean */
+  --card: oklch(0.26 0.02 45);
   --primary: oklch(
     67.764% 0.11456 67.729
   ); /* Brightened Caramel to pop on dark */

@@ -44,8 +44,7 @@ export default async function ProfilePage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-cream/10 pb-6">
             <div className="space-y-1">
               <h2 className="flex items-center gap-3 font-serif text-3xl text-cream">
-                <PackageCheck className="text-cream size-8" /> Awaiting
-                Reflection
+                <PackageCheck className="text-cream size-8" /> Awaiting Reviews
               </h2>
               <p className="text-cream/30 text-xs italic ml-11">
                 Items delivered and ready for your critique.
@@ -82,7 +81,7 @@ export default async function ProfilePage() {
                       />
                     </div>
                     <div>
-                      <p className="text-cream font-serif text-xl font-bold group-hover:text-white transition-colors">
+                      <p className="text-cream font-serif text-xl font-bold group-hover:text-cream transition-colors">
                         {order.items[0]?.meal?.name}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
@@ -97,7 +96,7 @@ export default async function ProfilePage() {
 
                   <Link
                     href={`/dashboard/profile/create-review?mealId=${order.items[0]?.meal?.id}`}
-                    className="relative z-10 w-full md:w-auto text-center px-10 py-4 rounded-full bg-[#1A0F0D] border border-cream/20 text-[10px] text-cream hover:bg-primary-foreground hover:text-brownie hover:scale-105 active:scale-95 transition-all duration-500 font-bold uppercase tracking-[0.25em] shadow-lg overflow-hidden"
+                    className="relative z-10 w-full md:w-auto text-center px-10 py-4 rounded-full bg-[#1A0F0D] border border-cream/20 text-[10px] text-cream hover:bg-cream hover:text-primary-foreground hover:scale-105 active:scale-95 transition-all duration-500 font-semibold uppercase tracking-[0.25em] shadow-lg overflow-hidden"
                   >
                     Share Review
                   </Link>
@@ -107,7 +106,7 @@ export default async function ProfilePage() {
               <div className="py-24 px-6 rounded-[3rem] border border-dashed border-cream/10 flex flex-col items-center justify-center text-center bg-black/10 transition-colors hover:bg-black/20 group">
                 <ShieldAlert className="size-12 text-cream/10 mb-4 group-hover:text-cream/20 transition-colors duration-500" />
                 <p className="text-cream/20 font-serif text-lg italic">
-                  No recent deliveries are currently awaiting reflection.
+                  No deliveries are currently awaiting reviews.
                 </p>
               </div>
             )}

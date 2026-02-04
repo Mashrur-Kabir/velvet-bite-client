@@ -12,61 +12,67 @@ export default function MealCard({ meal }: { meal: IMeal }) {
 
   return (
     <motion.div
-      whileHover={{ y: -8 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className="h-full"
     >
       <Link
         href={`/meals/${meal.id}`}
-        className="group flex flex-col h-full border border-caramel/10 rounded-[2rem] overflow-hidden bg-[#2D1B16]/40 backdrop-blur-md transition-all duration-500 hover:border-caramel/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+        /* Added 'force-hardware-acceleration' classes to the parent container too */
+        className="group flex flex-col h-full border border-caramel/10 rounded-[1.5rem] overflow-hidden bg-[#2D1B16]/40 backdrop-blur-md transition-all duration-500 hover:border-caramel/30 hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)] isolation-isolate transform-gpu"
       >
-        {/* Image Container with unique zoom effect */}
-        <div className="relative aspect-[4/3] w-full overflow-hidden">
+        {/* Visual Anchor */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[2.5rem]">
           <Image
             src={imgSrc}
             alt={meal.name}
             fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            /* FIX: Added scale-101 as the base state. 
+               This keeps the GPU layer "warm" and prevents the pixel-snapping jitter 
+               when moving from 100% to 105%.
+            */
+            className="object-cover scale-101 transition-transform duration-700 cubic-bezier(0.33, 1, 0.68, 1) group-hover:scale-105 will-change-transform transform-gpu backface-hidden"
             onError={() => setImgSrc("/placeholder-meal.jpg")}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A0F0D] via-transparent to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A0F0D]/80 via-transparent to-transparent opacity-60 pointer-events-none" />
 
-          {/* Floating Rating Badge */}
-          <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-[#1A0F0D]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-caramel/20">
-            <Star className="size-3.5 fill-caramel text-caramel" />
-            <span className="text-xs font-bold text-cream">
+          {/* Rating Badge */}
+          <div className="absolute top-3 right-3 flex items-center gap-1 bg-[#1A0F0D]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-caramel/20 z-10">
+            <Star className="size-3 fill-caramel text-caramel" />
+            <span className="text-[10px] font-bold text-cream">
               {meal.avgRating}
             </span>
           </div>
         </div>
 
-        {/* Card Body - flex-1 ensures the footer stays at the bottom */}
-        <div className="flex flex-col flex-1 p-6 space-y-3">
-          <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.2em] font-serif">
+        {/* Content Section */}
+        <div className="flex flex-col flex-1 p-5 space-y-2">
+          <div className="space-y-0.5">
+            <p className="text-[9px] uppercase tracking-[0.25em] font-serif text-caramel/60">
               {meal.category.name}
             </p>
-            <h3 className="text-xl font-serif font-bold text-primary group-hover:text-cream transition-colors">
+            <h3 className="text-lg font-serif font-bold text-primary group-hover:text-cream transition-colors line-clamp-1">
               {meal.name}
             </h3>
           </div>
 
-          <p className="text-sm text-cream/60 line-clamp-2 italic font-light leading-relaxed flex-1">
+          <p className="text-xs text-cream/60 line-clamp-2 italic font-light leading-relaxed flex-1">
             {meal.description}
           </p>
 
-          <div className="pt-4 flex justify-between items-center border-t border-caramel/5">
+          <div className="pt-3 flex justify-between items-center border-t border-caramel/5">
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase text-caramel/40 font-bold">
-                PRICE
+              <span className="text-[8px] uppercase text-caramel/30 font-bold tracking-widest">
+                Price
               </span>
-              <span className="text-xl font-bold text-cream">
-                ${meal.price}
+              <span className="text-lg font-bold text-cream">
+                ${meal.price.toFixed(2)}
               </span>
             </div>
 
-            <div className="size-10 rounded-full bg-caramel/10 flex items-center justify-center text-caramel transition-all duration-300 group-hover:bg-caramel group-hover:text-brownie">
-              <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+            <div className="size-9 rounded-full bg-caramel/10 flex items-center justify-center text-caramel transition-all duration-300 group-hover:bg-caramel group-hover:text-brownie">
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </div>
           </div>
         </div>

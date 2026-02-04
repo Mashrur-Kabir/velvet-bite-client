@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 // 1. Logic Harmony: Define the Login Schema
 const loginSchema = z.object({
@@ -172,21 +174,49 @@ export function LoginForm() {
                 {([canSubmit, isSubmitting]) => (
                   <Button
                     type="submit"
-                    disabled={!canSubmit}
-                    className="w-full bg-primary hover:bg-amber-800 text-accent hover:text-white rounded-2xl py-7 font-bold text-lg shadow-lg shadow-amber-800/20 active:scale-[0.98] transition-all"
+                    disabled={!canSubmit || isSubmitting}
+                    className="w-full h-14 bg-cream text-primary-foreground rounded-2xl font-bold text-lg shadow-xl shadow-accent/5 hover:bg-primary-foreground/80 hover:text-white/90 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 group"
                   >
-                    {isSubmitting ? "Verifying..." : "Sign In"}
+                    {isSubmitting ? (
+                      <Loader2 className="animate-spin size-5" />
+                    ) : (
+                      <span className="flex items-center gap-2 tracking-tight">
+                        Sign In
+                        <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    )}
                   </Button>
                 )}
               </form.Subscribe>
+
+              {/* --- CLASSY DIVIDER --- */}
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-accent/5" />
+                </div>
+                <div className="relative px-4 bg-transparent">
+                  <span className="text-[10px] uppercase tracking-[0.5em] text-cream font-black italic">
+                    Or
+                  </span>
+                </div>
+              </div>
 
               <Button
                 onClick={handleGoogleLogin}
                 variant="outline"
                 type="button"
-                className="w-full border-border/50 hover:bg-accent rounded-2xl py-6 transition-colors"
+                className="w-full h-14 border-accent/10 bg-cream text-primary-foreground hover:bg-primary-foreground/80 hover:border-cream/40 hover:text-white/90 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 group"
               >
-                Sign in with Google
+                {/* Lucide Icons for Google often require a custom SVG or just use a generic Chrome icon */}
+                <svg
+                  className="size-4 group-hover:scale-110 transition-transform fill-current"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.21 5.39-7.84 5.39-4.84 0-8.79-4.01-8.79-8.91s3.95-8.91 8.79-8.91c2.75 0 4.59 1.16 5.64 2.17l2.58-2.48C19.11 0 16.03 0 12.48 0 5.86 0 .5 5.37.5 12s5.36 12 11.98 12c6.91 0 11.5-4.86 11.5-11.7 0-.79-.08-1.39-.18-1.98h-11.32z" />
+                </svg>
+                <span className="font-semibold tracking-wide text-sm">
+                  Continue with Google
+                </span>
               </Button>
 
               <p className="text-center text-sm text-muted-foreground mt-2">

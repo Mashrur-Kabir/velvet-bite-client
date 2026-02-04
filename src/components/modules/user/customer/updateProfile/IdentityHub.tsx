@@ -55,7 +55,7 @@ export default function IdentityHub({ user }: { user: IUser }) {
           <div className="flex flex-wrap justify-center md:justify-start gap-8 pt-4 border-t border-cream/5">
             <div className="space-y-1">
               <p className="text-[10px] text-cream/20 uppercase font-bold tracking-widest">
-                Orders Handled
+                Orders made
               </p>
               <p className="text-2xl font-serif text-cream">
                 {user._count?.orders || 0}

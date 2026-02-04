@@ -1,9 +1,23 @@
 import { getProviderOrdersAction } from "@/actions/provider.action";
+import { cn } from "@/lib/utils";
 import { Clock, Eye, ShoppingBag, ShieldAlert } from "lucide-react"; // Added ShieldAlert
 import Link from "next/link";
 
 export default async function MyOrdersPage() {
   const { data: orders } = await getProviderOrdersAction();
+
+  const statusStyles: Record<string, string> = {
+    // Amber: Signals a new, incoming request
+    PLACED: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+    // Teal: Represents active culinary craft
+    PREPARING: "bg-teal-500/10 text-teal-500 border-teal-500/20",
+    // Violet: The "Hero" color for a finished masterpiece
+    READY: "bg-violet-500/10 text-violet-500 border-violet-500/20",
+    // Emerald: Solid green for successful arrival
+    DELIVERED: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+    // Rose: Subtle red for a halted process
+    CANCELLED: "bg-rose-500/10 text-rose-500 border-rose-500/20",
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 py-16 px-6">
@@ -34,13 +48,11 @@ export default async function MyOrdersPage() {
                   </h4>
                   <div className="flex items-center gap-3 text-[10px] uppercase font-bold tracking-widest mt-1">
                     <span
-                      className={`px-2 py-1 rounded-md ${
-                        order.status === "CANCELLED"
-                          ? "bg-rose-500/10 text-rose-500 border border-rose-500/20" // Specialized for CANCELLED
-                          : order.status === "PLACED"
-                            ? "bg-amber-500/10 text-amber-500" // Existing PLACED style
-                            : "bg-primary/10 text-primary" // Default for PREPARING, READY, DELIVERED
-                      }`}
+                      className={cn(
+                        "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-300",
+                        statusStyles[order.status] ||
+                          "bg-primary/10 text-primary border-primary/20",
+                      )}
                     >
                       {order.status}
                     </span>

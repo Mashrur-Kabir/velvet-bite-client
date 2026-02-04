@@ -73,7 +73,7 @@ export default function OrderCard({ order }: { order: IOrder }) {
               <div
                 key={item.id || idx}
                 // Added 'group' to handle nested hover effects
-                className="group flex justify-between items-center p-5 bg-background/30 rounded-2xl border border-border/10 hover:bg-[#654321] transition-all duration-500 cursor-default"
+                className="group flex justify-between items-center p-5 bg-background/60 rounded-2xl border border-border/10 hover:bg-cream transition-all duration-500 cursor-default"
               >
                 <div className="flex items-center gap-4">
                   <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center border border-primary/10 group-hover:bg-[#1A0F0D]/20 group-hover:border-[#1A0F0D]/20 transition-all duration-500">

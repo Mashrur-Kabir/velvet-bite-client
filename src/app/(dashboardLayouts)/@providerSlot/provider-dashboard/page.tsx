@@ -167,7 +167,7 @@ export default async function ProviderDashboardPage() {
                 {activeOrders.slice(0, 4).map((order) => (
                   <div
                     key={order.id}
-                    className="p-6 bg-card/40 border border-border/20 rounded-[2.2rem] flex justify-between items-center group hover:border-primary/40 transition-all duration-500 backdrop-blur-sm"
+                    className="p-6 bg-card/40 border border-border/20 rounded-[2.2rem] flex justify-between items-center group hover:border-primary/40 transition-all duration-500 backdrop-blur-lg"
                   >
                     <div className="flex items-center gap-6">
                       <div className="size-14 rounded-2xl bg-background/50 flex items-center justify-center border border-border/10 shadow-lg">
@@ -202,7 +202,7 @@ export default async function ProviderDashboardPage() {
                 <UtensilsCrossed className="size-10 text-muted-foreground/20 mb-6 group-hover:scale-110 transition-transform" />
                 <p className="font-serif italic text-xl text-cream/30 max-w-xs leading-relaxed">
                   Your kitchen is currently quiet. Re-sync your menu to start
-                  receiving transmissions.
+                  receiving orders.
                 </p>
               </div>
             )}
@@ -232,7 +232,7 @@ export default async function ProviderDashboardPage() {
 
                 <div className="flex justify-between items-center border-b border-white/5 pb-6">
                   <span className="text-[10px] uppercase font-bold text-cream/40 tracking-widest">
-                    Transmission Count
+                    Order Count
                   </span>
                   <span className="text-xl font-bold text-cream">
                     {orders.length}
@@ -241,7 +241,7 @@ export default async function ProviderDashboardPage() {
 
                 <div className="flex justify-between items-center border-b border-white/5 pb-6">
                   <span className="text-[10px] uppercase font-bold text-cream/40 tracking-widest">
-                    Avg. Transmission
+                    Avg. Order
                   </span>
                   <span className="text-xl font-bold text-primary">
                     $

@@ -95,7 +95,7 @@ export default function CustomerDashboard({
             <div className="flex flex-wrap gap-4">
               <Button
                 asChild
-                className="group relative bg-amber-700 hover:bg-amber-900 text-white font-bold rounded-full px-12 py-6 transition-all duration-300 shadow-lg overflow-hidden"
+                className="group relative bg-primary hover:bg-amber-900 text-primary-foreground font-bold rounded-full px-12 py-6 transition-all duration-300 shadow-lg overflow-hidden"
               >
                 <Link
                   href="/meals"
@@ -186,9 +186,9 @@ export default function CustomerDashboard({
                     </div>
                     <Link
                       href={`/dashboard/my-orders/update-order?orderId=${order.id}`}
-                      className="p-2 rounded-full hover:bg-caramel/10 text-caramel transition-all"
+                      className="p-2 rounded-full bg-cream hover:bg-primary-foreground/70 text-primary-foreground hover:text-cream transition-all"
                     >
-                      <ArrowRight size={18} />
+                      <ArrowRight size={22} />
                     </Link>
                   </div>
                 ))
@@ -220,12 +220,12 @@ export default function CustomerDashboard({
               {providers.slice(0, 4).map((p) => (
                 <div
                   key={p.id}
-                  className="p-4 rounded-2xl bg-muted/30 border border-transparent hover:border-caramel/20 hover:bg-muted/50 transition-all text-center"
+                  className="group p-4 rounded-2xl bg-accent/40 border border-transparent hover:border-primary-foreground/40 hover:bg-cream transition-all text-center"
                 >
-                  <p className="text-xs font-bold truncate text-brownie dark:text-cream">
+                  <p className="text-xs font-bold truncate text-cream group-hover:text-primary-foreground transition-colors">
                     {p.name}
                   </p>
-                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground mt-1">
+                  <p className="text-[9px] uppercase tracking-widest text-muted-foreground mt-1 group-hover:text-primary-foreground/80 transition-colors">
                     Velvet Partner
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export default function CustomerDashboard({
             <Button
               asChild
               variant="outline"
-              className="w-full mt-8 rounded-full border-caramel/30 text-caramel hover:bg-caramel/5 font-bold uppercase tracking-widest text-[10px]"
+              className="w-full mt-8 rounded-full border-caramel/30 bg-cream hover:bg-primary-foreground/70 text-primary-foreground hover:text-cream font-bold uppercase tracking-widest text-[10px]"
             >
               <Link href="/providers">Explore All Providers</Link>
             </Button>

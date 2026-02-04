@@ -90,7 +90,7 @@ export default function OrderCard({ order }: { order: IOrder }) {
         {/* --- ITEM ORCHESTRATION --- */}
         <div className="space-y-6">
           <h3 className="text-[10px] uppercase tracking-widest text-cream/60 font-bold flex items-center gap-2">
-            <Package size={14} className="text-primary" /> Manifest
+            <Package size={14} className="text-primary" /> Details:
           </h3>
           <div className="space-y-3">
             {order.items.map((item, idx) => {
@@ -101,25 +101,32 @@ export default function OrderCard({ order }: { order: IOrder }) {
               return (
                 <div
                   key={item.id || idx}
-                  className="flex justify-between items-center p-5 bg-background/30 rounded-2xl border border-border/10 hover:bg-primary/20 transition-colors group"
+                  className="flex justify-between items-center p-5 bg-background/30 rounded-2xl border border-border/10 hover:bg-cream/60 transition-all duration-300 group cursor-default"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center border border-border/10">
+                    {/* Icon Container with dynamic hover background */}
+                    <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center border border-border/10 group-hover:bg-primary-foreground/70 group-hover:border-brownie/10 transition-colors">
                       <ShoppingBag
                         size={16}
-                        className="text-primary/40 group-hover:text-primary transition-colors"
+                        className="text-primary/40 group-hover:text-brownie transition-colors"
                       />
                     </div>
+
                     <div>
-                      <p className="text-sm font-bold text-cream">
+                      {/* Meal Name: Swaps to primary-foreground (Brownie) on hover */}
+                      <p className="text-sm font-bold text-cream group-hover:text-primary-foreground transition-colors">
                         {item.meal?.name || "Recipe Restricted"}
                       </p>
-                      <p className="text-[10px] text-primary uppercase font-bold tracking-widest">
+
+                      {/* Qty Detail: Swaps to accent on hover */}
+                      <p className="text-[10px] text-primary uppercase font-bold tracking-widest group-hover:text-[#742805] transition-colors">
                         Qty: {item.quantity} × ${unitPrice.toFixed(2)}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm font-serif text-cream/60">
+
+                  {/* Subtotal: Muted cream to brownie for archival clarity */}
+                  <p className="text-sm font-serif text-cream/60 group-hover:text-primary-foreground transition-colors">
                     ${subtotal.toFixed(2)}
                   </p>
                 </div>

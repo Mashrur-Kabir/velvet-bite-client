@@ -1,6 +1,8 @@
 import { IMealFilter } from "@/types/moduleTypes/meal.type";
 import MealCard from "@/components/modules/public/MealCard";
 import { publicService } from "@/services/publicServices/public.service";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   searchParams: Promise<IMealFilter>;
@@ -21,7 +23,18 @@ export default async function MealsPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-[#1A0F0D] py-12">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 relative">
+        {/* --- NAVIGATION: BACK BUTTON --- */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 mb-8 text-[12px] uppercase font-bold tracking-[0.3em] text-cream/40 hover:text-cream transition-all duration-300 group"
+        >
+          <ChevronLeft
+            size={20}
+            className="group-hover:-translate-x-1 transition-transform"
+          />
+          Return to home
+        </Link>
         <header className="mb-12 space-y-2">
           <h1 className="text-5xl font-serif font-bold text-cream tracking-tight">
             Explore <span className="text-accent italic">Meals</span>

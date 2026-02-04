@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com", // This is the host for Google profile photos
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

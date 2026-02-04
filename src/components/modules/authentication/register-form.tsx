@@ -1,7 +1,7 @@
 "use client";
 
-import { useForm } from "@tanstack/react-form";
-import { motion } from "framer-motion";
+import { StandardSchemaV1Issue, useForm } from "@tanstack/react-form";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 const formSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email address"), // Fixed z.email to z.string().email
+    email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Minimum 8 characters"),
     confirmPassword: z.string().min(8, "Minimum 8 characters"),
     role: z.enum(["customer", "provider"]),
@@ -34,6 +34,36 @@ const formSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+type FieldErrorProps = {
+  errors?: (StandardSchemaV1Issue | undefined)[];
+};
+
+// Typed Error Component keeping your subtle archival style
+const FieldError = ({ errors }: FieldErrorProps) => {
+  const issue = errors?.find(
+    (e): e is StandardSchemaV1Issue =>
+      typeof e === "object" && e !== undefined && "message" in e,
+  );
+
+  return (
+    <div className="min-h-[16px] mt-1">
+      <AnimatePresence mode="wait">
+        {issue && (
+          <motion.span
+            key={issue.message}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            className="text-[10px] text-rose-400 italic font-medium tracking-wide block ml-1"
+          >
+            {issue.message}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export function RegisterForm() {
   const router = useRouter();
@@ -46,10 +76,9 @@ export function RegisterForm() {
       confirmPassword: "",
       role: "customer" as "customer" | "provider",
     },
-    validators: { onSubmit: formSchema },
+    validators: { onChange: formSchema }, // Validate on change for better UX
     onSubmit: async ({ value }) => {
       const registrationPromise = async () => {
-        // Use 'as any' or a custom type cast to bypass the narrow base type inference
         const { data, error } = await authClient.signUp.email({
           email: value.email,
           password: value.password,
@@ -64,9 +93,7 @@ export function RegisterForm() {
       toast.promise(registrationPromise(), {
         loading: "Syncing with the Velvet kitchen...",
         success: () => {
-          // 1. Reset the form fields after successful registration
           form.reset();
-          // 2. Redirect to home
           router.push("/");
           return (
             <div className="flex flex-col">
@@ -81,11 +108,10 @@ export function RegisterForm() {
         },
         error: (err) => err.message,
         style: {
-          background: "#5E3023", // Brownie
-          color: "#F3E9DC", // Cream
-          border: "1px solid #C08552", // Caramel
+          background: "#5E3023",
+          color: "#F3E9DC",
+          border: "1px solid #C08552",
           padding: "16px",
-          // 2. Updated to light beige/caramel glow
           boxShadow: "0 0 15px rgba(192, 133, 82, 0.3)",
         },
       });
@@ -129,7 +155,7 @@ export function RegisterForm() {
                         className={cn(
                           "flex-1 py-3 rounded-xl text-sm font-bold transition-all capitalize",
                           field.state.value === r
-                            ? "bg-primary text-white shadow-md scale-[1.02]"
+                            ? "bg-cream text-primary-foreground scale-[1.02]"
                             : "text-muted-foreground hover:bg-background/50",
                         )}
                       >
@@ -143,31 +169,39 @@ export function RegisterForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <form.Field name="name">
                   {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="Your Name"
-                        className="rounded-xl border-border/50 h-12"
-                      />
+                    <div className="flex flex-col">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input
+                          id="name"
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder="Your Name"
+                          className="rounded-xl border-border/50 h-12"
+                        />
+                      </div>
+                      <FieldError errors={field.state.meta.errors} />
                     </div>
                   )}
                 </form.Field>
 
                 <form.Field name="email">
                   {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="name@example.com"
-                        className="rounded-xl border-border/50 h-12"
-                      />
+                    <div className="flex flex-col">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder="name@example.com"
+                          className="rounded-xl border-border/50 h-12"
+                        />
+                      </div>
+                      <FieldError errors={field.state.meta.errors} />
                     </div>
                   )}
                 </form.Field>
@@ -176,30 +210,38 @@ export function RegisterForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <form.Field name="password">
                   {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input
-                        id="password"
-                        type="password"
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="rounded-xl border-border/50 h-12"
-                      />
+                    <div className="flex flex-col">
+                      <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                          id="password"
+                          type="password"
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          className="rounded-xl border-border/50 h-12"
+                        />
+                      </div>
+                      <FieldError errors={field.state.meta.errors} />
                     </div>
                   )}
                 </form.Field>
 
                 <form.Field name="confirmPassword">
                   {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm</Label>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="rounded-xl border-border/50 h-12"
-                      />
+                    <div className="flex flex-col">
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Confirm</Label>
+                        <Input
+                          id="confirmPassword"
+                          type="password"
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          className="rounded-xl border-border/50 h-12"
+                        />
+                      </div>
+                      <FieldError errors={field.state.meta.errors} />
                     </div>
                   )}
                 </form.Field>
@@ -214,7 +256,7 @@ export function RegisterForm() {
                   <Button
                     type="submit"
                     disabled={!canSubmit}
-                    className="w-full bg-primary hover:bg-amber-800 text-accent hover:text-white rounded-2xl py-7 font-bold text-lg shadow-lg shadow-amber-800/20 active:scale-[0.98] transition-all"
+                    className="w-full bg-cream hover:bg-primary-foreground text-primary-foreground hover:text-white/90 rounded-2xl py-7 font-bold text-lg shadow-xs shadow-cream active:scale-[0.98] transition-all"
                   >
                     {isSubmitting ? "Creating..." : "Create Account"}
                   </Button>
@@ -222,7 +264,7 @@ export function RegisterForm() {
               </form.Subscribe>
 
               <p className="text-center text-sm text-muted-foreground mt-2">
-                Already have an account?{" "}
+                Already part of the collective?{" "}
                 <Link
                   href="/login"
                   className="text-primary font-extrabold hover:underline"

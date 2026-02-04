@@ -1,80 +1,37 @@
-"use client";
-
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-  Search,
-  ArrowRight,
-  Flame,
-  Crown,
-  Leaf,
-  Soup,
-  ChevronRight,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { publicService } from "@/services/publicServices/public.service";
+import { userService } from "@/services/userServices/user.service";
 import { TrendingMealCard } from "@/components/modules/homepage/TrendingMealCard";
-import { cn } from "@/lib/utils";
+import {
+  Soup,
+  ArrowRight,
+  ChevronRight,
+  ChefHat,
+  LayoutDashboard,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import * as motion from "framer-motion/client";
+import { Button } from "@/components/ui/button";
+import { ICategory, IMeal, IProvider } from "@/types";
+import { Roles } from "@/constants/userRoles";
+import { HeroSearch } from "@/components/modules/homepage/HeroSearch";
 
-// Mock Data for "Trending Now" Section
-const TRENDING_MEALS = [
-  {
-    id: "1",
-    name: "Velvet Truffle Pasta",
-    price: 18.5,
-    category: "Italian",
-    provider: "The Italian Bistro",
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856",
-    prepTime: "20-25 min",
-  },
-  {
-    id: "2",
-    name: "Golden Caramel Glaze Donut",
-    price: 4.25,
-    category: "Bakery",
-    provider: "Velvet Sweets",
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1551024506-0bccd828d307",
-    prepTime: "5-10 min",
-  },
-  {
-    id: "3",
-    name: "Roasted Coffee Bean Bowl",
-    price: 12.0,
-    category: "Healthy",
-    provider: "Coffee House",
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1541167760496-1628856ab772",
-    prepTime: "15-20 min",
-  },
-];
+export default async function Home() {
+  // 1. Data Fetching
+  const [categoriesRes, mealsRes, providersRes, sessionRes] = await Promise.all(
+    [
+      publicService.getCategories({ revalidate: 3600 }),
+      publicService.getMeals({ limit: 3 }, { revalidate: 60 }),
+      publicService.getProviders({ revalidate: 600 }),
+      userService.getSession(),
+    ],
+  );
 
-const CATEGORIES = [
-  {
-    name: "Trending",
-    icon: <Flame className="size-6" />,
-    color: "text-orange-500",
-  },
-  {
-    name: "Popular",
-    icon: <Crown className="size-6" />,
-    color: "text-yellow-500",
-  },
-  {
-    name: "Healthy",
-    icon: <Leaf className="size-6" />,
-    color: "text-green-500",
-  },
-  {
-    name: "Cuisines",
-    icon: <Soup className="size-6" />,
-    color: "text-primary",
-  },
-];
+  const categories: ICategory[] = categoriesRes.data || [];
+  const trendingMeals: IMeal[] = mealsRes.data || [];
+  const topProviders: IProvider[] = providersRes.data?.slice(0, 4) || [];
+  const user = sessionRes.data?.user;
 
-export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
       {/* 1. HERO SECTION */}
@@ -92,64 +49,49 @@ export default function Home() {
 
         <div className="container relative z-10 mx-auto flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-4xl"
+            transition={{
+              ease: [0.16, 1, 0.3, 1],
+              duration: 1.2,
+              opacity: { duration: 0.6 },
+            }}
+            className="max-w-4xl transform-gpu backface-hidden will-change-[transform,opacity]"
           >
             <h1 className="mb-6 text-6xl font-extrabold tracking-tight text-[#F3E9DC] md:text-8xl">
               Savor the{" "}
               <span className="text-primary font-serif italic">Velvet</span> in
               Every Bite
             </h1>
-            <p className="mb-10 text-lg text-[#F3E9DC]/80 md:text-2xl font-sans font-medium">
-              Discover local favorites and order delicious meals directly to
-              your doorstep.
+            <p className="mb-10 text-[13px] md:text-[15px] text-[#F3E9DC]/60 font-medium uppercase tracking-[0.25em] leading-relaxed max-w-2xl mx-auto">
+              Real-time flavors from the best local kitchens, delivered to your
+              doorstep.
             </p>
 
-            <div className="mx-auto flex w-full max-w-2xl items-center gap-2 rounded-full bg-white/10 p-2 backdrop-blur-xl border border-white/20 shadow-2xl transition-all focus-within:bg-white/15">
-              <div className="flex flex-1 items-center px-4">
-                <Search className="mr-2 size-5 text-[#F3E9DC]/60" />
-                <Input
-                  type="text"
-                  placeholder="Search for meals or restaurants..."
-                  className="border-none bg-transparent text-[#F3E9DC] placeholder:text-[#F3E9DC]/60 focus-visible:ring-0 text-lg"
-                />
-              </div>
-              <Button
-                asChild
-                className="rounded-full bg-primary px-10 py-6 text-lg font-bold hover:bg-amber-800 hover:text-white transition-all active:scale-95 shadow-lg"
-              >
-                <Link href="/meals">Explore</Link>
-              </Button>
-            </div>
+            {/* USE THE ROBUST COMPONENT HERE */}
+            <HeroSearch />
           </motion.div>
         </div>
       </section>
 
       <div className="relative z-20 bg-background">
-        {/* 2. QUICK CATEGORIES SECTION */}
+        {/* 2. DYNAMIC CATEGORIES */}
         <section className="container mx-auto pt-20 px-6 pb-20">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-            {CATEGORIES.map((cat, i) => (
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-6">
+            {categories.slice(0, 6).map((cat: ICategory, i: number) => (
               <motion.div
-                key={cat.name}
+                key={cat.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
               >
                 <Link
-                  href={`/meals?category=${cat.name.toLowerCase()}`}
-                  className="group relative flex h-40 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl bg-card border border-border transition-all hover:border-primary/40 hover:shadow-2xl active:scale-95"
+                  href={`/meals?category=${cat.name}`}
+                  className="group relative flex h-40 flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl bg-card border border-border transition-all hover:border-primary/40 hover:shadow-2xl"
                 >
-                  <div
-                    className={cn(
-                      "rounded-2xl bg-muted p-4 transition-transform group-hover:scale-110 group-hover:rotate-6",
-                      cat.color,
-                    )}
-                  >
-                    {cat.icon}
+                  <div className="rounded-2xl bg-muted p-4 transition-transform group-hover:scale-110 group-hover:rotate-6 text-primary">
+                    <Soup className="size-6" />
                   </div>
                   <span className="font-serif text-lg font-bold text-foreground">
                     {cat.name}
@@ -160,85 +102,121 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. TRENDING MEALS SECTION */}
+        {/* 3. TRENDING MEALS */}
         <section className="container mx-auto px-6 py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <motion.h2
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                className="text-4xl md:text-5xl font-serif font-bold text-brownie dark:text-cream"
-              >
-                Trending Now
-              </motion.h2>
-              <p className="text-muted-foreground text-lg mt-2">
-                The most ordered bites this week.
-              </p>
-            </div>
+          <div className="flex justify-between items-end mb-12">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-brownie dark:text-cream">
+              Trending Now
+            </h2>
             <Button
               asChild
               variant="ghost"
-              className="text-primary font-bold hover:text-caramel group"
+              className="text-primary font-bold group"
             >
-              <Link href="/meals" className="flex items-center">
-                Browse All Meals{" "}
-                <ChevronRight className="ml-1 size-5 transition-transform group-hover:translate-x-1" />
+              <Link href="/meals">
+                Browse All{" "}
+                <ChevronRight className="ml-1 size-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {TRENDING_MEALS.map((meal) => (
+            {trendingMeals.map((meal: IMeal) => (
               <TrendingMealCard key={meal.id} meal={meal} />
             ))}
           </div>
         </section>
 
-        {/* 4. CTA CONVERSION SECTION */}
+        {/* 4. MASTER KITCHENS */}
+        <section className="container mx-auto px-6 py-20 bg-muted/30 rounded-[4rem]">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-serif font-bold">Master Kitchens</h2>
+            <p className="text-muted-foreground mt-2">
+              The artisans behind your favorite flavors.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {topProviders.map((provider: IProvider) => (
+              <Link
+                key={provider.id}
+                href={`/providers/${provider.id}`}
+                className="p-8 bg-card rounded-[2.5rem] border border-border hover:border-primary/40 transition-all text-center group"
+              >
+                <div className="size-16 mx-auto bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+                  <ChefHat size={32} />
+                </div>
+                <h3 className="font-bold text-xl">{provider.name}</h3>
+                <p className="text-xs text-muted-foreground mt-1 uppercase tracking-widest truncate">
+                  {provider.address}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* 5. DYNAMIC CTA CONVERSION */}
         <section className="container mx-auto px-6 py-24">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            className="rounded-[3rem] bg-brownie p-12 md:p-20 text-cream shadow-2xl shadow-black/80 text-center relative overflow-hidden"
+            viewport={{ once: true }}
+            className="rounded-[3rem] bg-primary-foreground/50 p-12 md:p-20 text-cream shadow-2xl shadow-black/90 text-center relative overflow-hidden"
           >
-            {/* Subtle Background Pattern */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none">
-              <div className="absolute top-0 left-0 w-64 h-64 bg-cream rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-            </div>
-
             <h2 className="relative z-10 mb-6 text-4xl font-bold md:text-6xl font-serif">
-              Join the <span className="text-primary italic">Velvet</span>{" "}
-              Community
+              {user
+                ? `Welcome Back, ${user.name}`
+                : "Join the Velvet Community"}
             </h2>
             <p className="relative z-10 mb-12 text-cream/70 text-lg md:text-xl max-w-2xl mx-auto">
-              Whether you are a foodie looking for the next bite or a provider
-              ready to share your menu, we have a place for you.
+              {user?.role === Roles.admin &&
+                "The platform governance awaits your orchestration."}
+              {user?.role === Roles.provider &&
+                "Your kitchen is ready for new masterpieces."}
+              {user?.role === Roles.customer &&
+                "Ready for your next culinary investment?"}
+              {!user &&
+                "Whether you are a foodie or a provider, we have a place for you."}
             </p>
-            <div className="relative z-10 flex flex-wrap justify-center gap-6">
-              {/* Primary CTA: Start Ordering */}
-              <Button
-                asChild
-                size="lg"
-                className="bg-primary text-white hover:bg-amber-800 rounded-full px-12 py-7 text-lg font-bold shadow-xl active:scale-95 group transition-all duration-300"
-              >
-                <Link href="/register" className="flex items-center">
-                  Start Ordering
-                  <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
 
-              {/* Secondary CTA: Become a Provider */}
-              <Button
-                asChild
-                size="lg"
-                className={cn(
-                  "rounded-full px-5 py-7 text-lg font-bold transition-all duration-300 active:scale-95",
-                  "border border-cream/30 text-cream bg-transparent",
-                  "hover:bg-amber-900",
-                )}
-              >
-                <Link href="/register?role=provider">Become a Provider</Link>
-              </Button>
+            <div className="relative z-10 flex flex-wrap justify-center gap-6">
+              {user ? (
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-primary text-primary-foreground hover:bg-amber-900 hover:text-white/80 rounded-full px-12 py-7 text-[14px] font-bold shadow-xl group"
+                >
+                  <Link
+                    href={
+                      user.role === Roles.admin
+                        ? "/admin-dashboard"
+                        : user.role === Roles.provider
+                          ? "/provider-dashboard"
+                          : "/dashboard"
+                    }
+                  >
+                    <LayoutDashboard className="mr-2 size-5" /> Go to Dashboard
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-primary text-primary-foreground hover:bg-amber-900 hover:text-white/80 rounded-full px-12 py-7 text-[14px] font-bold"
+                  >
+                    <Link href="/register">
+                      Start Ordering <ArrowRight className="ml-2 size-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full px-12 py-7 text-[14px] hover:text-white/90 font-bold border-cream/30 text-cream hover:bg-amber-900"
+                  >
+                    <Link href="/register">Join as Provider</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </motion.div>
         </section>

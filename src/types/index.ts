@@ -8,3 +8,4 @@ export type * from "./moduleTypes/order.type";
 export type * from "./moduleTypes/review.type";
 export type * from "./moduleTypes/user.type";
 export type * from "./moduleTypes/admin.type";
+export type * from "./legal.type";

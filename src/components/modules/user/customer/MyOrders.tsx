@@ -109,8 +109,10 @@ export default function MyOrdersComponent({
                 className="rounded-[2.5rem] border-caramel/10 bg-card/50 backdrop-blur-sm overflow-hidden shadow-premium-dark"
               >
                 <CardContent className="p-0">
-                  <div className="flex flex-col lg:flex-row">
-                    <div className="w-full lg:w-56 bg-gradient-to-br from-[#2D1B16] to-[#1A0F0D] p-10 flex flex-col items-center justify-center text-cream border-r border-caramel/5">
+                  {/* Changed from Flex to Grid for perfect vertical alignment */}
+                  <div className="grid grid-cols-1 lg:grid-cols-[224px_1fr]">
+                    {/* --- SIDEBAR: CURRENT STAGE (Zero Gaps) --- */}
+                    <div className="bg-gradient-to-br from-[#2D1B16] to-[#1A0F0D] p-10 flex flex-col items-center justify-center text-cream border-b lg:border-b-0 lg:border-r border-caramel/5 h-full min-h-[220px]">
                       <div className="relative mb-6">
                         <Package className="size-12 text-caramel relative z-10" />
                         <motion.div
@@ -127,7 +129,8 @@ export default function MyOrdersComponent({
                       </span>
                     </div>
 
-                    <div className="flex-1 p-10 space-y-8">
+                    {/* --- MAIN CONTENT --- */}
+                    <div className="p-10 space-y-8">
                       <div className="flex flex-wrap justify-between items-start gap-4">
                         <div>
                           <p className="text-[10px] uppercase tracking-[0.2em] text-caramel font-bold mb-2">
@@ -198,11 +201,8 @@ export default function MyOrdersComponent({
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-caramel/10 bg-muted/20 text-[10px] uppercase tracking-[0.25em] text-caramel font-serif">
-                  {/* FIX 1: Column Headers now total 4 */}
                   <th className="p-8 font-bold">Timeline & Identity</th>
-                  <th className="p-8 font-bold text-center">
-                    Total Investment
-                  </th>
+                  <th className="p-8 font-bold text-center">Total Price</th>
                   <th className="p-8 font-bold text-center">Date</th>
                   <th className="p-8 font-bold text-center">Status</th>
                 </tr>
@@ -214,7 +214,6 @@ export default function MyOrdersComponent({
                       key={order.id}
                       className="group hover:bg-caramel/5 transition-all duration-300"
                     >
-                      {/* FIX 2: Identity Column (Kitchen + Ref ID) */}
                       <td className="p-8">
                         <div className="flex flex-col gap-1">
                           <span className="text-sm font-serif italic text-muted-foreground group-hover:text-brownie dark:group-hover:text-cream transition-colors">
@@ -226,12 +225,10 @@ export default function MyOrdersComponent({
                         </div>
                       </td>
 
-                      {/* FIX 3: Total Investment aligned center */}
                       <td className="p-8 text-center font-bold text-brownie dark:text-cream">
                         ${order.totalAmount}
                       </td>
 
-                      {/* FIX 4: Date column with integrated icon */}
                       <td className="p-8">
                         <div className="flex items-center justify-center gap-3">
                           <div className="size-9 rounded-xl bg-muted/80 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500">
@@ -243,7 +240,6 @@ export default function MyOrdersComponent({
                         </div>
                       </td>
 
-                      {/* FIX 5: Status as the final column */}
                       <td className="p-8 text-center">
                         <Badge
                           variant="outline"
@@ -261,7 +257,6 @@ export default function MyOrdersComponent({
                   ))
                 ) : (
                   <tr>
-                    {/* FIX 6: Updated colSpan to match header count */}
                     <td colSpan={4} className="p-20 text-center">
                       <div className="flex flex-col items-center gap-4 opacity-30">
                         <ShoppingBag className="size-12" />

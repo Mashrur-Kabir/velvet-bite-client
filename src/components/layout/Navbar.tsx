@@ -34,12 +34,12 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ModeToggle } from "./ModeToggle";
 import { useMounted } from "@/hooks/useMounted";
 import { motion } from "framer-motion";
-import { authClient } from "@/lib/auth-client"; // Import auth client
-import { Roles } from "@/constants/userRoles"; // Import Roles
+import { authClient } from "@/lib/auth-client";
+import { Roles } from "@/constants/userRoles";
 import { useRouter, usePathname } from "next/navigation";
+import { AuthButtons } from "@/handlers/navbarHandler/AuthButtons";
 
 const MotionLink = motion.create(Link);
 
@@ -56,11 +56,9 @@ const Navbar = ({ className }: { className?: string }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // 1. Get Session state from Better Auth
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
-  // 2. Dynamic Dashboard Route Logic
   const getDashboardUrl = () => {
     if (!user) return "/login";
     switch (user.role) {
@@ -69,7 +67,7 @@ const Navbar = ({ className }: { className?: string }) => {
       case Roles.provider:
         return "/provider-dashboard";
       default:
-        return "/dashboard"; // Default for CUSTOMER
+        return "/dashboard";
     }
   };
 
@@ -119,7 +117,7 @@ const Navbar = ({ className }: { className?: string }) => {
           title: "Start Ordering",
           description: "Choose a kitchen to order from your home",
           icon: <Beef className="size-5 shrink-0" />,
-          url: "/order",
+          url: "/dashboard/create-orders",
         },
       ],
     },
@@ -143,10 +141,34 @@ const Navbar = ({ className }: { className?: string }) => {
     },
   ];
 
+  const filteredMenu = menu.map((item) => {
+    if (item.items) {
+      return {
+        ...item,
+        items: item.items
+          .filter((subItem) => {
+            if (subItem.title === "Start Ordering") {
+              return (
+                user?.role !== Roles.admin && user?.role !== Roles.provider
+              );
+            }
+            return true;
+          })
+          .map((subItem) => {
+            if (subItem.title === "Start Ordering" && !user) {
+              return { ...subItem, url: "/login" };
+            }
+            return subItem;
+          }),
+      };
+    }
+    return item;
+  });
+
   return (
     <section
       className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur `supports-backdrop-filter:bg-background/60` py-4",
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 py-4",
         className,
       )}
     >
@@ -174,13 +196,19 @@ const Navbar = ({ className }: { className?: string }) => {
             {isMounted && (
               <NavigationMenu>
                 <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                  {/* 3. Add Dashboard to main menu if logged in */}
+                  {filteredMenu.map((item) => renderMenuItem(item, pathname))}
                   {user && (
                     <NavigationMenuItem>
                       <NavigationMenuLink
                         asChild
-                        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-cream"
+                        className={cn(
+                          "relative group inline-flex h-10 w-max items-center justify-center px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
+                          "hover:!bg-transparent focus:!bg-transparent active:!bg-transparent text-muted-foreground hover:text-primary",
+                          "after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:h-[1px] after:bg-primary after:transition-all after:duration-500",
+                          pathname.includes("dashboard")
+                            ? "text-primary after:w-full"
+                            : "after:w-0 hover:after:w-full",
+                        )}
                       >
                         <Link href={getDashboardUrl()}>Dashboard</Link>
                       </NavigationMenuLink>
@@ -193,47 +221,17 @@ const Navbar = ({ className }: { className?: string }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          {isMounted ? <ModeToggle /> : <div className="size-10" />}
-
           <nav className="hidden lg:flex items-center gap-3">
-            {/* 4. Conditional Auth Buttons */}
             {!user ? (
-              <>
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    "relative h-9 px-4 group",
-                    "hover:bg-primary-foreground",
-                    "after:absolute after:bottom-1 after:left-0 after:h-0.5 after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
-                    pathname === "/login"
-                      ? "after:w-full"
-                      : "after:w-0 hover:after:w-full",
-                  )}
-                >
-                  <Link href="/login">Login</Link>
-                </Button>
-
-                <Button
-                  asChild
-                  size="sm"
-                  className="bg-primary hover:bg-accent hover:text-white font-bold text-black rounded-lg transition-shadow"
-                >
-                  <Link href="/register">Register</Link>
-                </Button>
-              </>
+              <AuthButtons />
             ) : (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleSignOut}
-                className="group relative w-32 overflow-hidden rounded-xl border-caramel/50 text-brownie transition-all hover:bg-destructive hover:text-white"
+                className="group relative w-32 h-9 overflow-hidden rounded-full border-destructive/20 text-destructive transition-all duration-500 hover:bg-destructive hover:text-white font-bold uppercase tracking-[0.2em] text-[10px]"
               >
-                {/* The Icon: Starts on the left, moves to center on hover */}
-                <LogOut className="absolute left-4 size-4 transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2" />
-
-                {/* The Text: Fades out and slides to the right on hover */}
+                <LogOut className="absolute left-4 size-3.5 transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2" />
                 <span className="ml-6 transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0">
                   Sign Out
                 </span>
@@ -241,17 +239,23 @@ const Navbar = ({ className }: { className?: string }) => {
             )}
           </nav>
 
-          {/* Mobile Menu */}
           <div className="lg:hidden flex items-center">
             {isMounted && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-xl border-caramel/20"
+                  >
                     <Menu className="size-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right">
-                  <SheetHeader className="mb-4">
+                <SheetContent
+                  side="right"
+                  className="bg-background border-l border-caramel/10"
+                >
+                  <SheetHeader className="mb-8 border-b border-caramel/5 pb-4">
                     <Image
                       src={logo.src}
                       alt={logo.alt}
@@ -262,57 +266,35 @@ const Navbar = ({ className }: { className?: string }) => {
                   </SheetHeader>
                   <div className="flex flex-col gap-6">
                     <Accordion type="single" collapsible className="w-full">
-                      {menu.map((item) => renderMobileMenuItem(item))}
+                      {filteredMenu.map((item) =>
+                        renderMobileMenuItem(item, pathname),
+                      )}
                       {user && (
                         <Link
                           href={getDashboardUrl()}
-                          className="text-md font-bold py-3 block text-cream"
+                          className={cn(
+                            "text-[10px] uppercase tracking-[0.3em] font-black py-4 block transition-colors",
+                            pathname.includes("dashboard")
+                              ? "text-primary"
+                              : "text-cream/60",
+                          )}
                         >
                           Go to Dashboard
                         </Link>
                       )}
                     </Accordion>
-                    <div className="flex flex-col gap-3 pt-4 border-t">
-                      {!user ? (
-                        <>
-                          <Button
-                            asChild
-                            variant="ghost"
-                            size="sm"
-                            className={cn(
-                              "relative h-9 px-4 group",
-                              "hover:bg-primary-foreground",
-                              "after:absolute after:bottom-1 after:left-0 after:h-[2px] after:bg-brownie dark:after:bg-white after:transition-all after:duration-300",
-                              pathname === "/login"
-                                ? "after:w-full"
-                                : "after:w-0 hover:after:w-full",
-                            )}
-                          >
-                            <Link href="/login">Login</Link>
-                          </Button>
 
-                          <Button
-                            asChild
-                            size="sm"
-                            className="bg-primary hover:bg-accent hover:text-white text-black rounded-lg transition-shadow"
-                          >
-                            <Link href="/register">Register</Link>
-                          </Button>
-                        </>
+                    <div className="flex flex-col gap-3 pt-6 border-t border-caramel/10">
+                      {!user ? (
+                        <AuthButtons className="flex-col items-stretch w-full gap-3" />
                       ) : (
                         <Button
                           variant="outline"
-                          size="sm"
                           onClick={handleSignOut}
-                          className="group relative w-20 overflow-hidden rounded-xl border-caramel/50 text-brownie transition-all hover:bg-destructive hover:text-white"
+                          className="w-full h-12 rounded-full border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all font-bold uppercase tracking-[0.2em] text-[10px]"
                         >
-                          {/* The Icon: Starts on the left, moves to center on hover */}
-                          <LogOut className="absolute left-4 size-4 transition-all duration-300 group-hover:left-1/2 group-hover:-translate-x-1/2" />
-
-                          {/* The Text: Fades out and slides to the right on hover */}
-                          <span className="ml-6 transition-all duration-300 group-hover:translate-x-10 group-hover:opacity-0">
-                            Sign Out
-                          </span>
+                          <LogOut className="mr-2 size-4" />
+                          Sign Out
                         </Button>
                       )}
                     </div>
@@ -327,16 +309,25 @@ const Navbar = ({ className }: { className?: string }) => {
   );
 };
 
-/* --- Render Functions --- */
-const renderMenuItem = (item: MenuItem) => {
+const renderMenuItem = (item: MenuItem, pathname: string) => {
   if (item.items) {
+    const isActive = item.items.some((sub) => pathname === sub.url);
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-brownie/80 dark:text-cream dark:hover:text-white hover:text-primary">
+        <NavigationMenuTrigger
+          className={cn(
+            "text-[10px] font-bold uppercase tracking-[0.2em] bg-transparent transition-all",
+            // FIX 2: Kill extra borders and Persistent BG on triggers
+            "hover:!bg-transparent focus:!bg-transparent data-[state=open]:!bg-transparent border-none focus:ring-0",
+            isActive
+              ? "text-primary"
+              : "text-muted-foreground hover:text-primary",
+          )}
+        >
           {item.title}
         </NavigationMenuTrigger>
         <NavigationMenuContent>
-          <ul className="grid w-100 gap-3 p-4 md:w-125 md:grid-cols-2 lg:w-150 bg-card">
+          <ul className="grid w-80 gap-3 p-4 bg-card border border-caramel/10 rounded-2xl shadow-2xl">
             {item.items.map((subItem) => (
               <NavigationMenuLink asChild key={subItem.title}>
                 <SubMenuLink item={subItem} />
@@ -351,7 +342,15 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         asChild
-        className="group relative inline-flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors text-brownie dark:text-cream dark:hover:text-white"
+        className={cn(
+          "relative group inline-flex h-10 w-max items-center justify-center px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors",
+          // FIX 1: Kill persistent active/focus background
+          "hover:!bg-transparent focus:!bg-transparent active:!bg-transparent text-muted-foreground hover:text-primary",
+          "after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:h-[1px] after:bg-primary after:transition-all after:duration-500",
+          pathname === item.url
+            ? "text-primary after:w-full"
+            : "after:w-0 hover:after:w-full",
+        )}
       >
         <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>
@@ -359,19 +358,24 @@ const renderMenuItem = (item: MenuItem) => {
   );
 };
 
-const renderMobileMenuItem = (item: MenuItem) => {
+const renderMobileMenuItem = (item: MenuItem, pathname: string) => {
   if (item.items) {
     return (
       <AccordionItem key={item.title} value={item.title} className="border-b-0">
-        <AccordionTrigger className="text-md py-3 font-semibold hover:text-primary">
+        <AccordionTrigger className="text-[11px] uppercase tracking-[0.2em] py-4 font-black hover:text-primary">
           {item.title}
         </AccordionTrigger>
-        <AccordionContent className="flex flex-col gap-2">
+        <AccordionContent className="flex flex-col gap-1 pl-4 border-l border-caramel/10 ml-2">
           {item.items.map((subItem) => (
             <Link
               key={subItem.title}
               href={subItem.url}
-              className="block p-2 rounded-md hover:bg-brownie hover:text-cream text-sm transition-colors"
+              className={cn(
+                "block p-3 rounded-xl text-[10px] uppercase tracking-widest transition-all",
+                pathname === subItem.url
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary/5 text-muted-foreground",
+              )}
             >
               {subItem.title}
             </Link>
@@ -384,7 +388,12 @@ const renderMobileMenuItem = (item: MenuItem) => {
     <Link
       key={item.title}
       href={item.url}
-      className="relative text-md font-semibold py-3 block w-fit"
+      className={cn(
+        "text-[11px] uppercase tracking-[0.2em] py-4 font-black block w-fit transition-colors",
+        pathname === item.url
+          ? "text-primary"
+          : "text-muted-foreground hover:text-primary",
+      )}
     >
       {item.title}
     </Link>
@@ -395,15 +404,17 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <Link
       href={item.url}
-      className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors hover:bg-brownie group"
+      className="flex flex-row gap-4 rounded-xl p-3 leading-none no-underline transition-all hover:bg-primary/5 group"
     >
-      <div className="text-primary group-hover:text-cream">{item.icon}</div>
+      <div className="text-primary transition-transform group-hover:scale-110">
+        {item.icon}
+      </div>
       <div>
-        <div className="text-sm font-semibold group-hover:text-cream">
+        <div className="text-[11px] uppercase tracking-wider font-bold text-cream group-hover:text-primary transition-colors">
           {item.title}
         </div>
         {item.description && (
-          <p className="text-sm leading-snug text-muted-foreground mt-1 group-hover:text-cream/80">
+          <p className="text-[10px] leading-snug text-muted-foreground mt-1 line-clamp-2 group-hover:text-muted-foreground">
             {item.description}
           </p>
         )}

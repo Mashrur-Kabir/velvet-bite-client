@@ -1,6 +1,8 @@
 import { publicService } from "@/services/publicServices/public.service";
 import CategoryCard from "@/components/modules/public/CategoryCard";
 import { ICategory } from "@/types";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export default async function CategoriesPage() {
   const { data: categories, error } = await publicService.getCategories();
@@ -14,7 +16,19 @@ export default async function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-[#1A0F0D] py-32 px-6 overflow-hidden">
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto max-w-7xl relative">
+        {/* Changed -top-16 to -top-10 or -top-12 to stay within visible range */}
+        <Link
+          href="/"
+          className="absolute -top-12 left-0 flex items-center gap-2 text-[12px] uppercase font-bold tracking-[0.3em] text-cream/50 hover:text-cream transition-colors group z-20"
+        >
+          <ChevronLeft
+            size={20}
+            className="group-hover:-translate-x-1 transition-transform"
+          />
+          Return to Home
+        </Link>
+
         <header className="mb-24 space-y-6 text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 bg-caramel/5 blur-[120px] -z-10" />
 
