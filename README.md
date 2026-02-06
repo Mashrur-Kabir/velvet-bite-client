@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Velvet Bite – Frontend
 
-## Getting Started
+A modern **Next.js 16** frontend for the Velvet Bite restaurant & food ordering platform. This client application provides a smooth UI/UX for browsing menu items, authentication, ordering, and user interaction.
 
-First, run the development server:
+---
+
+## 🚀 Tech Stack
+
+### Core
+
+- **Next.js 16 (App Router)** – React framework for SSR, routing, and performance
+- **React 19** – Component‑based UI library
+- **TypeScript** – Type‑safe JavaScript
+
+### UI & Styling
+
+- **Tailwind CSS v4** – Utility‑first styling
+- **Radix UI** – Accessible UI primitives
+- **Framer Motion** – Animations and transitions
+- **Lucide Icons** – Modern icon set
+- **Sonner** – Toast notifications
+- **next-themes** – Dark/light mode support
+- **nextjs-toploader** – Page loading indicator
+
+### Forms & Validation
+
+- **@tanstack/react-form** – Form state management
+- **Zod** – Schema validation
+
+### Authentication & Env
+
+- **better-auth** – Authentication handling
+- **@t3-oss/env-nextjs** – Type‑safe environment variables
+
+---
+
+## ⚙️ Environment Variables
+
+Create a **.env** file in the root:
+
+```env
+BACKEND_URL=https://velvet-bite-server.vercel.app/api
+FRONTEND_URL=https://velvet-bite-client.vercel.app
+```
+
+> Never expose private keys in the frontend.
+
+---
+
+## 🛠️ Installation & Setup
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd velvet-bite-client
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Available Scripts
 
-## Learn More
+```bash
+npm run dev      # Start development server
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Authentication Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Uses **better-auth** for session handling
+- Secure communication with backend API
+- Token/session stored safely in browser
+- Protected routes handled via middleware or layout guards
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 UI/UX Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Responsive mobile‑first design
+- Smooth animations via Framer Motion
+- Toast feedback for actions
+- Loading progress indicator between routes
+
+---
+
+## 🌐 API Communication
+
+All requests are sent to:
+
+```
+${BACKEND_URL}
+```
+
+Typical flow:
+
+1. User action in UI
+2. Form validation with **Zod**
+3. API request to backend
+4. Response handled with toast + UI update
+
+---
+
+## 🚀 Deployment
+
+Recommended platform: **Vercel**
+
+### Steps
+
+1. Push code to GitHub
+2. Import project into Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+---
+
+## 🧪 Linting & Code Quality
+
+- ESLint configured with **eslint-config-next**
+- Type safety via **TypeScript**
+- Consistent styling using Tailwind utilities
+
+---
+
+## 👨‍💻 Author
+
+**Kabir**
+Aspiring full‑stack developer focused on building scalable MERN & Next.js applications.
