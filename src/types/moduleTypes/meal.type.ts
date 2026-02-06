@@ -25,6 +25,7 @@ export interface IMeal {
 export interface IMealFilter {
   search?: string;
   categoryId?: string;
+  category?: string;
   providerId?: string;
   isAvailable?: boolean;
   limit?: number;

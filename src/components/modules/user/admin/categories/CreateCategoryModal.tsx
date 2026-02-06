@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Tag, Loader2 } from "lucide-react";
 import { createCategoryAction } from "@/actions/admin.action";
@@ -29,7 +29,7 @@ export default function CreateCategoryModal() {
     padding: "16px",
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!name.trim())
       return toast.error("Category identity required", { style: toastStyle });

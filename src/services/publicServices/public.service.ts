@@ -28,9 +28,9 @@ export const publicService = {
       }
 
       const config: RequestInit = {
-        cache: options?.cache || "force-cache", // Default to SSG
+        cache: options?.cache || "no-store", // Default to SSG
         next: {
-          revalidate: options?.revalidate,
+          // revalidate: options?.revalidate,
           tags: ["meals"],
         },
       };
@@ -75,9 +75,8 @@ export const publicService = {
   getProviders: async function (options?: ServiceOptions) {
     try {
       const res = await fetch(`${API_URL}/providers`, {
-        cache: options?.cache || "force-cache",
+        cache: options?.cache || "no-store",
         next: {
-          revalidate: options?.revalidate || 10,
           tags: ["providers"],
         },
       });

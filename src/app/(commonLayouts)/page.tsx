@@ -198,20 +198,32 @@ export default async function Home() {
                 </Button>
               ) : (
                 <>
+                  {/* Primary CTA: Start Ordering - Centering Animation Fix */}
                   <Button
                     asChild
                     size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-amber-900 hover:text-white/80 rounded-full px-12 py-7 text-[14px] font-bold"
+                    className="group relative overflow-hidden text-white bg-[#5E0000] hover:bg-cream hover:text-primary-foreground rounded-full px-12 py-7 text-[15px] font-bold shadow-lg transition-all duration-300 active:scale-95 border-none min-w-[240px]"
                   >
                     <Link href="/register">
-                      Start Ordering <ArrowRight className="ml-2 size-5" />
+                      {/* Changed -translate-x-3 to translate-x-4. 
+                      This moves the text RIGHT (to the middle) when the arrow exits.
+                      */}
+                      <span className="relative flex items-center transition-all duration-300 group-hover:translate-x-4">
+                        Start Ordering
+                        <ArrowRight className="ml-2 size-5 opacity-0" />
+                      </span>
+
+                      {/* Arrow slides out to the right */}
+                      <ArrowRight className="absolute right-10 size-5 transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0" />
                     </Link>
                   </Button>
+
+                  {/* Secondary CTA: Join as Provider */}
                   <Button
                     asChild
                     size="lg"
                     variant="outline"
-                    className="rounded-full px-12 py-7 text-[14px] hover:text-white/90 font-bold border-cream/30 text-cream hover:bg-amber-900"
+                    className="rounded-full px-12 py-7 text-[15px] font-bold border-2 border-[#F5F5DC]/30 text-[#F5F5DC] bg-transparent hover:bg-cream hover:text-[#2D1B10] transition-all duration-300 min-w-[240px]"
                   >
                     <Link href="/register">Join as Provider</Link>
                   </Button>

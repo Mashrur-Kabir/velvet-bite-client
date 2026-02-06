@@ -42,9 +42,10 @@ export const getAdminOrderByIdAction = async (id: string) => {
   return await adminService.getOrderById(id);
 };
 
-export const getAllCategoriesAction = async () =>
-  await publicService.getCategories({ cache: "no-store" });
-
+export const getAllCategoriesAction = async () => {
+  const res = await publicService.getCategories({ cache: "no-store" });
+  return res;
+};
 export const createCategoryAction = async (name: string) => {
   const res = await adminService.createCategory({ name });
   if (res.data) revalidateTag("categories", "max");

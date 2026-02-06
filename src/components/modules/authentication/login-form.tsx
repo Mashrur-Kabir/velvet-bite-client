@@ -175,7 +175,7 @@ export function LoginForm() {
                   <Button
                     type="submit"
                     disabled={!canSubmit || isSubmitting}
-                    className="w-full h-14 bg-cream text-primary-foreground rounded-2xl font-bold text-lg shadow-xl shadow-accent/5 hover:bg-primary-foreground/80 hover:text-white/90 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 group"
+                    className="w-full h-14 bg-cream text-primary-foreground rounded-2xl font-bold text-lg shadow-xl shadow-accent/5 hover:bg-primary-foreground/80 hover:text-white/90 border hover:border-cream hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 group"
                   >
                     {isSubmitting ? (
                       <Loader2 className="animate-spin size-5" />

@@ -191,7 +191,7 @@ const Navbar = ({ className }: { className?: string }) => {
               priority
             />
           </MotionLink>
-
+          {/* LAPTOP VIEW */}
           <nav className="hidden lg:block">
             {isMounted && (
               <NavigationMenu>
@@ -239,6 +239,7 @@ const Navbar = ({ className }: { className?: string }) => {
             )}
           </nav>
 
+          {/* MOBILE VIEW */}
           <div className="lg:hidden flex items-center">
             {isMounted && (
               <Sheet>
@@ -253,7 +254,7 @@ const Navbar = ({ className }: { className?: string }) => {
                 </SheetTrigger>
                 <SheetContent
                   side="right"
-                  className="bg-background border-l border-caramel/10"
+                  className="bg-background border-l border-caramel/10 px-5"
                 >
                   <SheetHeader className="mb-8 border-b border-caramel/5 pb-4">
                     <Image
@@ -273,7 +274,7 @@ const Navbar = ({ className }: { className?: string }) => {
                         <Link
                           href={getDashboardUrl()}
                           className={cn(
-                            "text-[10px] uppercase tracking-[0.3em] font-black py-4 block transition-colors",
+                            "text-[10px] uppercase tracking-[0.3em] font-black py-4 block transition-colors hover:text-cream",
                             pathname.includes("dashboard")
                               ? "text-primary"
                               : "text-cream/60",
@@ -291,10 +292,10 @@ const Navbar = ({ className }: { className?: string }) => {
                         <Button
                           variant="outline"
                           onClick={handleSignOut}
-                          className="w-full h-12 rounded-full border-destructive/20 text-destructive hover:bg-destructive hover:text-white transition-all font-bold uppercase tracking-[0.2em] text-[10px]"
+                          className="w-full h-12 rounded-full border-cream/10 bg-transparent text-cream/60 hover:bg-cream hover:text-[#2D1B16] hover:border-cream transition-all duration-300 active:scale-95 font-bold uppercase tracking-[0.2em] text-[10px] group"
                         >
-                          <LogOut className="mr-2 size-4" />
-                          Sign Out
+                          <LogOut className="mr-2 size-4 group-hover:-translate-x-0.5 transition-transform duration-300" />
+                          <span>Sign Out</span>
                         </Button>
                       )}
                     </div>

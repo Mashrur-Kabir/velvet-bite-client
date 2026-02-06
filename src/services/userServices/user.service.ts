@@ -12,7 +12,13 @@ export const userService = {
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${AUTH_URL}/get-session`, {
-        headers: { cookie: cookieStore.toString() },
+        method: "GET",
+        headers: {
+          // Logistical check: ensure all cookies are forwarded
+          cookie: cookieStore.toString(),
+        },
+        // Include credentials for the handshake
+        credentials: "include",
         cache: "no-store",
       });
 

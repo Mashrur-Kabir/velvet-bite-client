@@ -127,32 +127,53 @@ export default function CreateOrderFormClient({ providers, allMeals }: Props) {
                   Select Provider
                 </FieldLabel>
                 <Select
+                  // Ensure the value stays in sync with your local state
+                  value={
+                    selectedProviderId || (providers.length === 0 ? "none" : "")
+                  }
                   onValueChange={(val) => {
+                    if (val === "none") return;
                     setSelectedProviderId(val);
                     form.setFieldValue("items", [{ mealId: "", quantity: 1 }]);
                   }}
                 >
                   <SelectTrigger className="bg-black/20 border-caramel/10 rounded-2xl h-14 text-cream focus:ring-caramel/20">
-                    <SelectValue placeholder="Which kitchen are you craving?" />
+                    <SelectValue>
+                      {/* Refined Logic:
+          1. If no providers exist, show "No kitchens..."
+          2. If a kitchen is selected, show its name
+          3. Otherwise, show the default craving prompt
+      */}
+                      {providers.length === 0
+                        ? "No kitchens available"
+                        : selectedProviderId
+                          ? providers.find((p) => p.id === selectedProviderId)
+                              ?.name
+                          : "Which kitchen are you craving?"}
+                    </SelectValue>
                   </SelectTrigger>
+
                   <SelectContent className="bg-[#2D1B16] border-caramel/20 text-cream rounded-2xl">
-                    {providers.map((p) => (
+                    {providers.length > 0 ? (
+                      providers.map((p) => (
+                        <SelectItem
+                          key={p.id}
+                          value={p.id}
+                          className="focus:bg-caramel focus:text-brownie"
+                        >
+                          {p.name}
+                        </SelectItem>
+                      ))
+                    ) : (
                       <SelectItem
-                        key={p.id}
-                        value={p.id}
-                        className="focus:bg-caramel focus:text-brownie"
+                        value="none"
+                        disabled
+                        className="text-cream/60 italic py-4"
                       >
-                        <div className="flex items-center gap-2 leading-none">
-                          <span className="font-medium">{p.name}</span>
-                          <span className="text-caramel/40 opacity-50 text-[14px]">
-                            ━
-                          </span>
-                          <span className="text-[10px] opacity-50 uppercase tracking-tighter">
-                            {p.address}
-                          </span>
-                        </div>
+                        We&apos;re currently refining our kitchen list. Check
+                        back soon!
                       </SelectItem>
-                    ))}
+                    )}
                   </SelectContent>
                 </Select>
               </Field>

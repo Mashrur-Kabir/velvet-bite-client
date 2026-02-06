@@ -23,16 +23,36 @@ export default async function ProfilePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-16 pb-20 px-6">
       {/* 1. Header: Balanced and Elegant */}
-      <header className="animate-velvet-title space-y-3 mt-16 text-center max-w-2xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-serif font-bold text-cream tracking-tight">
-          Manage Your <span className="text-primary italic">Profile</span>
-        </h1>
-        <p className="text-cream/40 text-sm leading-relaxed uppercase tracking-[0.2em] font-medium">
-          Securely handle your culinary experience.
-        </p>
+      <header className="animate-velvet-title space-y-6 mt-16 text-center max-w-2xl mx-auto flex flex-col items-center">
+        <div className="space-y-3">
+          <h1 className="text-5xl md:text-6xl font-serif font-bold text-cream tracking-tight">
+            Manage Your <span className="text-primary italic">Profile</span>
+          </h1>
+          <p className="text-cream/40 text-sm leading-relaxed uppercase tracking-[0.2em] font-medium">
+            Securely handle your culinary experience.
+          </p>
+        </div>
+
+        {/* --- Update Profile Navigation --- */}
+        <Link
+          href="/dashboard/profile/update-profile"
+          className="mt-4 group relative px-8 py-3 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-white transition-all duration-500 overflow-hidden shadow-lg hover:shadow-primary/20"
+        >
+          <div className="flex items-center gap-2 relative z-10">
+            <span className="text-[10px] uppercase tracking-[0.4em] font-bold">
+              Update Identity
+            </span>
+            <ArrowRight
+              size={14}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </div>
+          {/* Animated background glow */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/10 to-primary/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        </Link>
+
         <div className="h-px w-60 bg-gradient-to-r from-transparent via-cream/40 to-transparent mx-auto mt-6" />
       </header>
-
       {/* 2. Main content: Centered Grid */}
       <main className="max-w-4xl mx-auto space-y-20">
         {/* --- IDENTITY HUB SECTION --- */}

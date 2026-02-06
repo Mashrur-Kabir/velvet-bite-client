@@ -7,7 +7,7 @@ export default function UpdateAdminProfilePage() {
     <div className="max-w-4xl mx-auto pb-20 pt-5 px-6 space-y-12">
       <header className="space-y-4">
         <Link
-          href="/dashboard/admin-dashboard"
+          href="/admin-dashboard"
           className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em] text-primary/60 hover:text-primary transition-colors"
         >
           <ChevronLeft size={14} /> Back to overview

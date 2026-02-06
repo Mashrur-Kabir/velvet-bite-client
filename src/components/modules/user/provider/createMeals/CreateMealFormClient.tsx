@@ -18,7 +18,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { cn } from "@/lib/utils";
 import * as z from "zod";
 import { createMealAction } from "@/actions/provider.action";
 import {
@@ -196,22 +195,33 @@ export default function CreateMealFormClient({
                       <div className="relative">
                         <Tag className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary/40" />
                         <select
-                          className="w-full pl-12 bg-background border border-border rounded-2xl h-14 appearance-none text-sm text-cream focus:border-primary focus:outline-none transition-all"
+                          className="w-full pl-12 bg-background border border-border rounded-2xl h-14 appearance-none text-sm text-cream focus:border-primary focus:outline-none transition-all disabled:opacity-50"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
+                          /* Disable the select if no categories exist to prevent invalid submissions */
+                          disabled={categories.length === 0}
                         >
-                          <option value="" className="font-bold italic">
-                            Select a Category
-                          </option>
-                          {categories.map((cat) => (
-                            <option
-                              key={cat.id}
-                              value={cat.id}
-                              className="bg-card"
-                            >
-                              {cat.name}
+                          {categories.length > 0 ? (
+                            <>
+                              <option value="" className="font-bold italic">
+                                Select a Category
+                              </option>
+                              {categories.map((cat) => (
+                                <option
+                                  key={cat.id}
+                                  value={cat.id}
+                                  className="bg-card"
+                                >
+                                  {cat.name}
+                                </option>
+                              ))}
+                            </>
+                          ) : (
+                            /* Fallback for when the kitchen archives are empty */
+                            <option value="" className="italic">
+                              No categories available. Contact an admin.
                             </option>
-                          ))}
+                          )}
                         </select>
                       </div>
                       {field.state.meta.isTouched && (

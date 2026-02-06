@@ -20,14 +20,7 @@ import {
 } from "@/components/ui/field";
 import { IUser } from "@/types";
 import { updateAdminProfileAction } from "@/actions/admin.action";
-import {
-  User,
-  Phone,
-  Image as ImageIcon,
-  Save,
-  X,
-  ShieldCheck,
-} from "lucide-react";
+import { User, Phone, Image as ImageIcon, Save, X } from "lucide-react";
 import * as z from "zod";
 
 // Admin Profile Validation Schema
@@ -67,7 +60,7 @@ export default function UpdateAdminProfileFormClient({
         loading: "Synchronizing administrative credentials...",
         success: (res) => {
           if (res.error) throw new Error(res.error.message);
-          router.push("/dashboard/admin-dashboard");
+          router.push("/admin-dashboard");
           return "Imperial records successfully updated.";
         },
         error: (err) => err.message,
@@ -176,7 +169,7 @@ export default function UpdateAdminProfileFormClient({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.push("/dashboard/admin-dashboard")}
+                  onClick={() => router.push("/admin-dashboard")}
                   className="flex-1 h-14 rounded-full border-primary/20 text-primary hover:bg-primary/5 transition-all uppercase tracking-widest text-[10px] font-bold"
                 >
                   <X size={14} className="mr-2" /> Discard Changes

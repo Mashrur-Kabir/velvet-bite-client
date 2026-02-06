@@ -24,7 +24,7 @@ export default function IdentityHub({ user }: { user: IUser }) {
                 fill
                 priority // 2. Critical: Stops the jitter by loading the image immediately
                 sizes="128px"
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 will-change-transform transform-gpu backface-visibility-hidden"
                 onError={() => setImageError(true)}
               />
             </div>
