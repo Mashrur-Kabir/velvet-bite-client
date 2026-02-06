@@ -42,11 +42,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // next.config.js
   async rewrites() {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/:path*`,
+        destination: `https://velvet-bite-server.vercel.app/api/:path*`,
       },
     ];
   },
